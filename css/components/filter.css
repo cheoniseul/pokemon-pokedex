@@ -1,3 +1,4 @@
+/* 공통 레이아웃 */
 .filters {
     max-width: 1200px;
     margin: 0 auto 40px;
@@ -8,146 +9,283 @@
     gap: 20px;
 }
 
-/* 한 줄 단위 (검색 / 지방 / 타입) */
 .filter_group {
     display: flex;
     align-items: flex-start;
     gap: 20px;
 }
 
-/* 왼쪽 라벨 */
 .filter_title {
     min-width: 60px;
-    font-size: 14px;
+    font-size: 18px;
     font-weight: 600;
     color: #333;
-    padding-top: 6px;
+    padding-top: 2px;
 }
 
-/* Search */
-.filter_search .search-input {
-    width: 280px;
-    height: 34px;
-    padding: 0 10px;
-
-    border: 1px solid #ccc;
-    border-radius: 4px;
-
-    font-size: 14px;
-}
-
-.filter_search .search-input:focus {
-    outline: none;
-    border-color: #555;
-}
-
+/* 검색 */
 .search_wrap {
     display: flex;
-    align-items: center;
-    gap: 6px;
-}
-
-.search_icon_btn {
-    width: 34px;
-    height: 34px;
-
-    border: 1px solid #999;
-    border-radius: 4px;
-    background: #fff;
-
-    display: flex;
-    align-items: center;
-    justify-content: center;
-
-    cursor: pointer;
-}
-
-.search_icon_btn:hover {
-    background-color: #f0f0f0;
-}
-
-/* Options Wrapper */
-.filter_options {
-    display: flex;
-    flex-wrap: wrap;
     gap: 8px;
 }
 
-/* Chip Button (공통) */
-.filter_chip {
-    height: 32px;
-    padding: 0 10px;
-
-    border: 1px solid #999;
+.search-input {
+    flex: 1;
+    height: 40px;
+    padding: 0 12px;
+    font-size: 15px;
+    border: 1px solid #ccc;
     border-radius: 4px;
+}
 
-    background-color: #fff;
-    color: #333;
+.search_icon_btn {
+    width: 40px;
+    height: 40px;
+    border: 1px solid #ccc;
+    background: #fff;
+    border-radius: 4px;
+    cursor: pointer;
+}
 
-    font-size: 13px;
-    line-height: 30px;
+/* 지방 선택 */
+.region_options {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+}
 
+.region_chip {
+    height: 38px;
+    padding: 0 14px;
+    border: 1px solid #bbb;
+    border-radius: 6px;
+    background: #fff;
+    color: #444;
+    font-size: 14.5px;
+    font-weight: 550;
     cursor: pointer;
     transition: all 0.15s ease;
 }
 
-.filter_chip:hover {
-    background-color: #f0f0f0;
+.region_chip:hover {
+    background: #eee;
 }
 
-/* 선택 상태 */
-.filter_chip.active {
-    background-color: #333;
+.region_chip.active {
+    background: #666;
     color: #fff;
-    border-color: #333;
+    border-color: #666;
 }
 
-/* Type Color (텍스트만 색) */
+/* 타입 선택 */
+.type_options {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+}
 
-.filter_type .fire { color: #e85c3a; }
-.filter_type .water { color: #4a90e2; }
-.filter_type .grass { color: #4caf50; }
-.filter_type .electric { color: #f5b400; }
-.filter_type .ice { color: #6ec6d9; }
-.filter_type .fighting { color: #c03028; }
-.filter_type .poison { color: #9b59b6; }
-.filter_type .ground { color: #b59a5b; }
-.filter_type .flying { color: #81a1c1; }
-.filter_type .psychic { color: #e0569a; }
-.filter_type .bug { color: #7cb342; }
-.filter_type .rock { color: #8d7f6a; }
-.filter_type .ghost { color: #6c5b7b; }
-.filter_type .dragon { color: #5e60ce; }
-.filter_type .dark { color: #444; }
-.filter_type .steel { color: #7f8c8d; }
-.filter_type .fairy { color: #f3a6c8; }
+.type_chip {
+    height: 38px;
+    padding: 0 14px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    background: #fff;
+    font-size: 14.5px;
+    font-weight: 550;
+    cursor: pointer;
+    transition: all 0.15s ease;
+}
 
+/* 선택 시 공통 */
+.type_chip.active {
+    color: #fff;
+    border-color: transparent;
+}
 
+/* ===== 선택 전: 텍스트 색 ===== */
+.type_chip.normal {
+    color: #999;
+}
+
+.type_chip.fire {
+    color: #ff612c;
+}
+
+.type_chip.water {
+    color: #2992ff;
+}
+
+.type_chip.grass {
+    color: #42bf24;
+}
+
+.type_chip.electric {
+    color: #ffdb00;
+}
+
+.type_chip.ice {
+    color: #42d8ff;
+}
+
+.type_chip.fighting {
+    color: #ffa202;
+}
+
+.type_chip.poison {
+    color: #994dcf;
+}
+
+.type_chip.ground {
+    color: #ab7939;
+}
+
+.type_chip.flying {
+    color: #95c9ff;
+}
+
+.type_chip.psychic {
+    color: #ff637f;
+}
+
+.type_chip.bug {
+    color: #9fa424;
+}
+
+.type_chip.rock {
+    color: #bcb889;
+}
+
+.type_chip.ghost {
+    color: #6e4570;
+}
+
+.type_chip.dragon {
+    color: #5462d6;
+}
+
+.type_chip.dark {
+    color: #4f4747;
+}
+
+.type_chip.steel {
+    color: #6aaed3;
+}
+
+.type_chip.fairy {
+    color: #ffb1ff;
+}
+
+/* ===== 선택 후: 배경 색 ===== */
+.type_chip.normal.active {
+    background: #999;
+    color: #fff;
+}
+
+.type_chip.fire.active {
+    background: #ff612c;
+    color: #fff;
+}
+
+.type_chip.water.active {
+    background: #2992ff;
+    color: #fff;
+}
+
+.type_chip.grass.active {
+    background: #42bf24;
+    color: #fff;
+}
+
+.type_chip.electric.active {
+    background: #ffdb00;
+    color: #fff;
+}
+
+.type_chip.ice.active {
+    background: #42d8ff;
+    color: #fff;
+}
+
+.type_chip.fighting.active {
+    background: #ffa202;
+    color: #fff;
+}
+
+.type_chip.poison.active {
+    background: #994dcf;
+    color: #fff;
+}
+
+.type_chip.ground.active {
+    background: #ab7939;
+    color: #fff;
+}
+
+.type_chip.flying.active {
+    background: #95c9ff;
+    color: #fff;
+}
+
+.type_chip.psychic.active {
+    background: #ff637f;
+    color: #fff;
+}
+
+.type_chip.bug.active {
+    background: #9fa424;
+    color: #fff;
+}
+
+.type_chip.rock.active {
+    background: #bcb889;
+    color: #fff;
+}
+
+.type_chip.ghost.active {
+    background: #6e4570;
+    color: #fff;
+}
+
+.type_chip.dragon.active {
+    background: #5462d6;
+    color: #fff;
+}
+
+.type_chip.dark.active {
+    background: #4f4747;
+    color: #fff;
+}
+
+.type_chip.steel.active {
+    background: #6aaed3;
+    color: #fff;
+}
+
+.type_chip.fairy.active {
+    background: #ffb1ff;
+    color: #fff;
+}
+
+/* 검색 / 초기화 버튼 */
 .filter_actions {
     display: flex;
     justify-content: center;
-    align-items: center;
-    gap: 10px;
+    gap: 12px;
+    margin-top: 24px;
 }
 
 .action_btn {
-    height: 34px;
-    padding: 0 16px;
-
-    border: 1px solid #999;
-    border-radius: 4px;
+    height: 40px;
+    padding: 0 24px;
+    font-size: 15px;
+    border: 1px solid #bbb;
+    border-radius: 6px;
     background: #fff;
-
-    font-size: 14px;
     cursor: pointer;
 }
 
-.action_btn:hover {
-    background-color: #f0f0f0;
-}
-
 .action_btn.primary {
-    background-color: #333;
+    background: #333;
     color: #fff;
     border-color: #333;
 }
