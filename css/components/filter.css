@@ -1,5 +1,6 @@
 /* 공통 레이아웃 */
 .filters {
+    position: relative;
     max-width: 1200px;
     margin: 0 auto 40px;
     padding: 24px 20px;
@@ -7,6 +8,22 @@
     display: flex;
     flex-direction: column;
     gap: 20px;
+
+    background-color: #f6f6f6;
+}
+
+.filters::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+
+    width: 100vw;
+    height: 100%;
+
+    background-color: #f6f6f6;
+    z-index: -1;
 }
 
 .filter_group {
@@ -34,18 +51,21 @@
     height: 40px;
     padding: 0 12px;
     font-size: 15px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
 }
 
 .search_icon_btn {
     width: 40px;
     height: 40px;
-    border: 1px solid #ccc;
-    background: #fff;
-    border-radius: 4px;
     cursor: pointer;
 }
+
+.search-input,
+.search_icon_btn {
+    border-color: #bbb;
+    border-radius: 4px;
+    background: #fff;
+}
+
 
 /* 지방 선택 */
 .region_options {
@@ -57,7 +77,7 @@
 .region_chip {
     height: 38px;
     padding: 0 14px;
-    border: 1px solid #bbb;
+    border: 1.5px solid #bbb;
     border-radius: 6px;
     background: #fff;
     color: #444;
@@ -87,205 +107,94 @@
 .type_chip {
     height: 38px;
     padding: 0 14px;
-    border: 1px solid #ccc;
     border-radius: 6px;
     background: #fff;
+
+    color: #444;
     font-size: 14.5px;
     font-weight: 550;
     cursor: pointer;
     transition: all 0.15s ease;
+
+    border: 1.5px solid var(--type-color, #bbb);
+}
+
+.type_chip:hover {
+    background-color: #eee;
 }
 
 /* 선택 시 공통 */
 .type_chip.active {
+    background: var(--type-color);
     color: #fff;
     border-color: transparent;
 }
 
-/* ===== 선택 전: 텍스트 색 ===== */
-.type_chip.normal {
-    color: #999;
-}
 
-.type_chip.fire {
-    color: #ff612c;
-}
-
-.type_chip.water {
-    color: #2992ff;
-}
-
-.type_chip.grass {
-    color: #42bf24;
-}
-
-.type_chip.electric {
-    color: #ffdb00;
-}
-
-.type_chip.ice {
-    color: #42d8ff;
-}
-
-.type_chip.fighting {
-    color: #ffa202;
-}
-
-.type_chip.poison {
-    color: #994dcf;
-}
-
-.type_chip.ground {
-    color: #ab7939;
-}
-
-.type_chip.flying {
-    color: #95c9ff;
-}
-
-.type_chip.psychic {
-    color: #ff637f;
-}
-
-.type_chip.bug {
-    color: #9fa424;
-}
-
-.type_chip.rock {
-    color: #bcb889;
-}
-
-.type_chip.ghost {
-    color: #6e4570;
-}
-
-.type_chip.dragon {
-    color: #5462d6;
-}
-
-.type_chip.dark {
-    color: #4f4747;
-}
-
-.type_chip.steel {
-    color: #6aaed3;
-}
-
-.type_chip.fairy {
-    color: #ffb1ff;
-}
-
-/* ===== 선택 후: 배경 색 ===== */
-.type_chip.normal.active {
-    background: #999;
-    color: #fff;
-}
-
-.type_chip.fire.active {
-    background: #ff612c;
-    color: #fff;
-}
-
-.type_chip.water.active {
-    background: #2992ff;
-    color: #fff;
-}
-
-.type_chip.grass.active {
-    background: #42bf24;
-    color: #fff;
-}
-
-.type_chip.electric.active {
-    background: #ffdb00;
-    color: #fff;
-}
-
-.type_chip.ice.active {
-    background: #42d8ff;
-    color: #fff;
-}
-
-.type_chip.fighting.active {
-    background: #ffa202;
-    color: #fff;
-}
-
-.type_chip.poison.active {
-    background: #994dcf;
-    color: #fff;
-}
-
-.type_chip.ground.active {
-    background: #ab7939;
-    color: #fff;
-}
-
-.type_chip.flying.active {
-    background: #95c9ff;
-    color: #fff;
-}
-
-.type_chip.psychic.active {
-    background: #ff637f;
-    color: #fff;
-}
-
-.type_chip.bug.active {
-    background: #9fa424;
-    color: #fff;
-}
-
-.type_chip.rock.active {
-    background: #bcb889;
-    color: #fff;
-}
-
-.type_chip.ghost.active {
-    background: #6e4570;
-    color: #fff;
-}
-
-.type_chip.dragon.active {
-    background: #5462d6;
-    color: #fff;
-}
-
-.type_chip.dark.active {
-    background: #4f4747;
-    color: #fff;
-}
-
-.type_chip.steel.active {
-    background: #6aaed3;
-    color: #fff;
-}
-
-.type_chip.fairy.active {
-    background: #ffb1ff;
-    color: #fff;
-}
+/* 타입색 */
+.type_chip.normal   { --type-color: #bbb; }
+.type_chip.fire     { --type-color: #ff612c; }
+.type_chip.water    { --type-color: #2992ff; }
+.type_chip.grass    { --type-color: #42bf24; }
+.type_chip.electric { --type-color: #ffdb00; }
+.type_chip.ice      { --type-color: #42d8ff; }
+.type_chip.fighting { --type-color: #ffa202; }
+.type_chip.poison   { --type-color: #994dcf; }
+.type_chip.ground   { --type-color: #ab7939; }
+.type_chip.flying   { --type-color: #95c9ff; }
+.type_chip.psychic  { --type-color: #ff637f; }
+.type_chip.bug      { --type-color: #9fa424; }
+.type_chip.rock     { --type-color: #bcb889; }
+.type_chip.ghost    { --type-color: #6e4570; }
+.type_chip.dragon   { --type-color: #5462d6; }
+.type_chip.dark     { --type-color: #4f4747; }
+.type_chip.steel    { --type-color: #6aaed3; }
+.type_chip.fairy    { --type-color: #ffb1ff; }
 
 /* 검색 / 초기화 버튼 */
 .filter_actions {
     display: flex;
     justify-content: center;
+    align-items: center;   /* ← 이거 추가 */
     gap: 12px;
     margin-top: 24px;
 }
 
+/* 공통 버튼 */
 .action_btn {
     height: 40px;
     padding: 0 24px;
     font-size: 15px;
-    border: 1px solid #bbb;
     border-radius: 6px;
-    background: #fff;
     cursor: pointer;
+    transition: all 0.15s ease;
+
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
 }
 
+/* 검색 버튼 */
 .action_btn.primary {
-    background: #333;
+    background: #2b2b2b;
     color: #fff;
-    border-color: #333;
+    border: 1px solid #2b2b2b;
 }
+
+.action_btn.primary:hover {
+    background: #1f1f1f;
+    border-color: #1f1f1f;
+}
+
+/* 초기화 버튼 */
+.action_btn:not(.primary) {
+    background: #f0f0f0;
+    color: #444;
+    border: 1px solid #ccc;
+}
+
+.action_btn:not(.primary):hover {
+    background: #e4e4e4;
+    color: #222;
+}
+
