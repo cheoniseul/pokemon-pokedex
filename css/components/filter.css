@@ -1,0 +1,153 @@
+.filters {
+    max-width: 1200px;
+    margin: 0 auto 40px;
+    padding: 24px 20px;
+
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+/* 한 줄 단위 (검색 / 지방 / 타입) */
+.filter_group {
+    display: flex;
+    align-items: flex-start;
+    gap: 20px;
+}
+
+/* 왼쪽 라벨 */
+.filter_title {
+    min-width: 60px;
+    font-size: 14px;
+    font-weight: 600;
+    color: #333;
+    padding-top: 6px;
+}
+
+/* Search */
+.filter_search .search-input {
+    width: 280px;
+    height: 34px;
+    padding: 0 10px;
+
+    border: 1px solid #ccc;
+    border-radius: 4px;
+
+    font-size: 14px;
+}
+
+.filter_search .search-input:focus {
+    outline: none;
+    border-color: #555;
+}
+
+.search_wrap {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.search_icon_btn {
+    width: 34px;
+    height: 34px;
+
+    border: 1px solid #999;
+    border-radius: 4px;
+    background: #fff;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    cursor: pointer;
+}
+
+.search_icon_btn:hover {
+    background-color: #f0f0f0;
+}
+
+/* Options Wrapper */
+.filter_options {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+/* Chip Button (공통) */
+.filter_chip {
+    height: 32px;
+    padding: 0 10px;
+
+    border: 1px solid #999;
+    border-radius: 4px;
+
+    background-color: #fff;
+    color: #333;
+
+    font-size: 13px;
+    line-height: 30px;
+
+    cursor: pointer;
+    transition: all 0.15s ease;
+}
+
+.filter_chip:hover {
+    background-color: #f0f0f0;
+}
+
+/* 선택 상태 */
+.filter_chip.active {
+    background-color: #333;
+    color: #fff;
+    border-color: #333;
+}
+
+/* Type Color (텍스트만 색) */
+
+.filter_type .fire { color: #e85c3a; }
+.filter_type .water { color: #4a90e2; }
+.filter_type .grass { color: #4caf50; }
+.filter_type .electric { color: #f5b400; }
+.filter_type .ice { color: #6ec6d9; }
+.filter_type .fighting { color: #c03028; }
+.filter_type .poison { color: #9b59b6; }
+.filter_type .ground { color: #b59a5b; }
+.filter_type .flying { color: #81a1c1; }
+.filter_type .psychic { color: #e0569a; }
+.filter_type .bug { color: #7cb342; }
+.filter_type .rock { color: #8d7f6a; }
+.filter_type .ghost { color: #6c5b7b; }
+.filter_type .dragon { color: #5e60ce; }
+.filter_type .dark { color: #444; }
+.filter_type .steel { color: #7f8c8d; }
+.filter_type .fairy { color: #f3a6c8; }
+
+
+.filter_actions {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+}
+
+.action_btn {
+    height: 34px;
+    padding: 0 16px;
+
+    border: 1px solid #999;
+    border-radius: 4px;
+    background: #fff;
+
+    font-size: 14px;
+    cursor: pointer;
+}
+
+.action_btn:hover {
+    background-color: #f0f0f0;
+}
+
+.action_btn.primary {
+    background-color: #333;
+    color: #fff;
+    border-color: #333;
+}

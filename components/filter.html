@@ -2,8 +2,15 @@
     <!-- 검색 -->
     <div class="filter_group filter_search">
         <label for="search" class="filter_title">검색</label>
-        <input type="text" id="search" class="search-input" placeholder="포켓몬 이름을 입력해 주세요." />
+
+        <div class="search_wrap">
+            <input type="text" id="search" class="search-input" placeholder="포켓몬 이름을 입력해 주세요." />
+            <button class="search_icon_btn" aria-label="검색">
+                <i class="fa-solid fa-magnifying-glass"></i>
+            </button>
+        </div>
     </div>
+
     <!-- 지방 -->
     <div class="filter_group filter_region">
         <span class="filter_title">지방</span>
@@ -29,24 +36,31 @@
         <span class="filter_title">타입</span>
 
         <div class="filter_options">
-            <button class="filter_chip" data-type="normal">노말</button>
-            <button class="filter_chip" data-type="fire">불꽃</button>
-            <button class="filter_chip" data-type="water">물</button>
-            <button class="filter_chip" data-type="grass">풀</button>
-            <button class="filter_chip" data-type="electric">전기</button>
-            <button class="filter_chip" data-type="ice">얼음</button>
-            <button class="filter_chip" data-type="fighting">격투</button>
-            <button class="filter_chip" data-type="poison">독</button>
-            <button class="filter_chip" data-type="ground">땅</button>
-            <button class="filter_chip" data-type="flying">비행</button>
-            <button class="filter_chip" data-type="psychic">에스퍼</button>
-            <button class="filter_chip" data-type="bug">벌레</button>
-            <button class="filter_chip" data-type="rock">바위</button>
-            <button class="filter_chip" data-type="ghost">고스트</button>
-            <button class="filter_chip" data-type="dragon">드래곤</button>
-            <button class="filter_chip" data-type="dark">악</button>
-            <button class="filter_chip" data-type="steel">강철</button>
-            <button class="filter_chip" data-type="fairy">페어리</button>
+            <button class="filter_chip normal" data-type="normal">노말</button>
+            <button class="filter_chip fire" data-type="fire">불꽃</button>
+            <button class="filter_chip water" data-type="water">물</button>
+            <button class="filter_chip grass" data-type="grass">풀</button>
+            <button class="filter_chip electric" data-type="electric">전기</button>
+            <button class="filter_chip ice" data-type="ice">얼음</button>
+            <button class="filter_chip fighting" data-type="fighting">격투</button>
+            <button class="filter_chip poison" data-type="poison">독</button>
+            <button class="filter_chip ground" data-type="ground">땅</button>
+            <button class="filter_chip flying" data-type="flying">비행</button>
+            <button class="filter_chip psychic" data-type="psychic">에스퍼</button>
+            <button class="filter_chip bug" data-type="bug">벌레</button>
+            <button class="filter_chip rock" data-type="rock">바위</button>
+            <button class="filter_chip ghost" data-type="ghost">고스트</button>
+            <button class="filter_chip dragon" data-type="dragon">드래곤</button>
+            <button class="filter_chip dark" data-type="dark">악</button>
+            <button class="filter_chip steel" data-type="steel">강철</button>
+            <button class="filter_chip fairy" data-type="fairy">페어리</button>
         </div>
     </div>
+
+    <!-- 검색 / 초기화 버튼 -->
+    <div class="filter_actions">
+        <button class="action_btn primary">검색</button>
+        <button class="action_btn">초기화</button>
+    </div>
+
 </section>
