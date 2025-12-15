@@ -11,6 +11,7 @@ async function loadAllComponents() {
 
     // filter DOM
     if (window.initRegionFilter) {
+        initFilterToggle();
         initRegionFilter();
         initTypeFilter();
         initResetButton();

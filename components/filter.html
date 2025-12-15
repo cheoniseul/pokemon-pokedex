@@ -1,66 +1,75 @@
 <section class="filters">
-    <!-- 검색 -->
-    <div class="filter_group filter_search">
-        <label for="search" class="filter_title">검색</label>
 
-        <div class="search_wrap">
-            <input type="text" id="search" class="search-input" placeholder="포켓몬 이름을 입력해 주세요." />
-            <button class="search_icon_btn" aria-label="검색">
-                <i class="fa-solid fa-magnifying-glass"></i>
-            </button>
+    <!-- 상단 검색 바 -->
+    <div class="filter_top">
+        <div class="search_center">
+            <div class="search_wrap large">
+                <input type="text" id="search" class="search-input" placeholder="포켓몬 이름을 입력해 주세요." />
+                <button class="search_icon_btn" aria-label="검색">
+                    <i class="fa-solid fa-magnifying-glass"></i>
+                </button>
+            </div>
         </div>
+
+        <!-- 상세 필터 버튼 (오른쪽) -->
+        <button type="button" class="filter_toggle_btn">
+            상세 필터
+            <i class="fa-solid fa-chevron-down"></i>
+        </button>
     </div>
 
-    <!-- 지방 -->
-    <div class="filter_group filter_region">
-        <span class="filter_title">지방</span>
+    <!-- 접히는 상세 필터 영역 -->
+    <div class="filter_detail">
 
-        <div class="region_options">
-            <button type="button" class="region_chip active" data-region="all">전체</button>
-            <button type="button" class="region_chip" data-region="kanto">관동지방</button>
-            <button type="button" class="region_chip" data-region="johto">성도지방</button>
-            <button type="button" class="region_chip" data-region="hoenn">호연지방</button>
-            <button type="button" class="region_chip" data-region="sinnoh">신오지방</button>
-            <button type="button" class="region_chip" data-region="unova">하나지방</button>
-            <button type="button" class="region_chip" data-region="kalos">칼로스지방</button>
-            <button type="button" class="region_chip" data-region="alola">알로라지방</button>
-            <button type="button" class="region_chip" data-region="galar">가라르지방</button>
-            <button type="button" class="region_chip" data-region="hisui">히스이지방</button>
-            <button type="button" class="region_chip" data-region="paldea">팔데아지방</button>
-            <button type="button" class="region_chip" data-region="unknown">미확인</button>
+        <!-- 지방 -->
+        <div class="filter_group filter_region">
+            <span class="filter_title">지방</span>
+            <div class="region_options">
+                <button type="button" class="region_chip active" data-region="all">전체</button>
+                <button type="button" class="region_chip" data-region="kanto">관동지방</button>
+                <button type="button" class="region_chip" data-region="johto">성도지방</button>
+                <button type="button" class="region_chip" data-region="hoenn">호연지방</button>
+                <button type="button" class="region_chip" data-region="sinnoh">신오지방</button>
+                <button type="button" class="region_chip" data-region="unova">하나지방</button>
+                <button type="button" class="region_chip" data-region="kalos">칼로스지방</button>
+                <button type="button" class="region_chip" data-region="alola">알로라지방</button>
+                <button type="button" class="region_chip" data-region="galar">가라르지방</button>
+                <button type="button" class="region_chip" data-region="hisui">히스이지방</button>
+                <button type="button" class="region_chip" data-region="paldea">팔데아지방</button>
+                <button type="button" class="region_chip" data-region="unknown">미확인</button>
+            </div>
         </div>
-    </div>
 
-    <!-- 타입 -->
-    <div class="filter_group filter_type">
-        <span class="filter_title">타입</span>
-
-        <div class="type_options">
-            <button type="button" class="type_chip normal" data-type="normal">노말</button>
-            <button type="button" class="type_chip fire" data-type="fire">불꽃</button>
-            <button type="button" class="type_chip water" data-type="water">물</button>
-            <button type="button" class="type_chip grass" data-type="grass">풀</button>
-            <button type="button" class="type_chip electric" data-type="electric">전기</button>
-            <button type="button" class="type_chip ice" data-type="ice">얼음</button>
-            <button type="button" class="type_chip fighting" data-type="fighting">격투</button>
-            <button type="button" class="type_chip poison" data-type="poison">독</button>
-            <button type="button" class="type_chip ground" data-type="ground">땅</button>
-            <button type="button" class="type_chip flying" data-type="flying">비행</button>
-            <button type="button" class="type_chip psychic" data-type="psychic">에스퍼</button>
-            <button type="button" class="type_chip bug" data-type="bug">벌레</button>
-            <button type="button" class="type_chip rock" data-type="rock">바위</button>
-            <button type="button" class="type_chip ghost" data-type="ghost">고스트</button>
-            <button type="button" class="type_chip dragon" data-type="dragon">드래곤</button>
-            <button type="button" class="type_chip dark" data-type="dark">악</button>
-            <button type="button" class="type_chip steel" data-type="steel">강철</button>
-            <button type="button" class="type_chip fairy" data-type="fairy">페어리</button>
+        <!-- 타입 -->
+        <div class="filter_group filter_type">
+            <span class="filter_title">타입</span>
+            <div class="type_options">
+                <button type="button" class="type_chip normal" data-type="normal">노말</button>
+                <button type="button" class="type_chip fire" data-type="fire">불꽃</button>
+                <button type="button" class="type_chip water" data-type="water">물</button>
+                <button type="button" class="type_chip grass" data-type="grass">풀</button>
+                <button type="button" class="type_chip electric" data-type="electric">전기</button>
+                <button type="button" class="type_chip ice" data-type="ice">얼음</button>
+                <button type="button" class="type_chip fighting" data-type="fighting">격투</button>
+                <button type="button" class="type_chip poison" data-type="poison">독</button>
+                <button type="button" class="type_chip ground" data-type="ground">땅</button>
+                <button type="button" class="type_chip flying" data-type="flying">비행</button>
+                <button type="button" class="type_chip psychic" data-type="psychic">에스퍼</button>
+                <button type="button" class="type_chip bug" data-type="bug">벌레</button>
+                <button type="button" class="type_chip rock" data-type="rock">바위</button>
+                <button type="button" class="type_chip ghost" data-type="ghost">고스트</button>
+                <button type="button" class="type_chip dragon" data-type="dragon">드래곤</button>
+                <button type="button" class="type_chip dark" data-type="dark">악</button>
+                <button type="button" class="type_chip steel" data-type="steel">강철</button>
+                <button type="button" class="type_chip fairy" data-type="fairy">페어리</button>
+            </div>
         </div>
-    </div>
 
-    <!-- 검색 / 초기화 버튼 -->
-    <div class="filter_actions">
-        <button type="submit" class="action_btn primary">검색</button>
-        <button class="action_btn">초기화</button>
-    </div>
+        <!-- 검색 / 초기화 -->
+        <div class="filter_actions">
+            <button type="submit" class="action_btn primary">검색</button>
+            <button type="button" class="action_btn">초기화</button>
+        </div>
 
+    </div>
 </section>

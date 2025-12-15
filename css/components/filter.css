@@ -1,4 +1,4 @@
-/* 공통 레이아웃 */
+/* filter */
 .filters {
     position: relative;
     max-width: 1200px;
@@ -26,24 +26,29 @@
     z-index: -1;
 }
 
-.filter_group {
+.filter_top {
     display: flex;
-    align-items: flex-start;
-    gap: 20px;
+    align-items: center;
+    gap: 16px;
 }
 
-.filter_title {
-    min-width: 60px;
-    font-size: 18px;
-    font-weight: 600;
-    color: #333;
-    padding-top: 2px;
+/* 검색 영역 중앙 정렬 */
+.search_center {
+    flex: 1;
+    display: flex;
+    justify-content: center;
 }
 
 /* 검색 */
 .search_wrap {
     display: flex;
     gap: 8px;
+}
+
+/* 검색창 크게 */
+.search_wrap.large {
+    width: 100%;
+    max-width: 520px;
 }
 
 .search-input {
@@ -61,11 +66,77 @@
 
 .search-input,
 .search_icon_btn {
-    border-color: #bbb;
+    border: 1px solid #bbb;
     border-radius: 4px;
     background: #fff;
 }
 
+/* 토글 버튼 */
+.filter_toggle_btn {
+    height: 40px;
+    padding: 0 16px;
+    border-radius: 20px;
+
+    background: #2b2b2b;
+    color: #fff;
+    font-size: 14px;
+    font-weight: 600;
+
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+
+    cursor: pointer;
+    border: none;
+    transition: all 0.2s ease;
+}
+
+.filter_toggle_btn:hover {
+    background: #1f1f1f;
+}
+
+/* 토글 아이콘 회전 */
+.filter_toggle_btn i {
+    transition: transform 0.2s ease;
+}
+
+.filter_toggle_btn i.rotated {
+    transform: rotate(180deg);
+}
+
+/* 토글 디테일 */
+.filter_detail {
+    overflow: hidden;
+    max-height: 0;
+    opacity: 0;
+    margin-top: 0;
+    transition:
+        max-height 0.3s ease,
+        opacity 0.2s ease,
+        margin-top 0.2s ease;
+}
+
+/* 열렸을 때 */
+.filter_detail.open {
+    max-height: 1000px;
+    opacity: 1;
+    margin-top: 20px;
+}
+
+.filter_group {
+    display: flex;
+    align-items: flex-start;
+    gap: 20px;
+    margin: 20px 0;
+}
+
+.filter_title {
+    min-width: 60px;
+    font-size: 18px;
+    font-weight: 600;
+    color: #333;
+    padding-top: 2px;
+}
 
 /* 지방 선택 */
 .region_options {
@@ -84,7 +155,10 @@
     font-size: 14.5px;
     font-weight: 550;
     cursor: pointer;
-    transition: all 0.15s ease;
+    transition: 
+        background-color 0.15s ease, 
+        color 0.15s ease, 
+        border-color 0.15s ease;
 }
 
 .region_chip:hover {
@@ -114,7 +188,10 @@
     font-size: 14.5px;
     font-weight: 550;
     cursor: pointer;
-    transition: all 0.15s ease;
+    transition: 
+        background-color 0.15s ease, 
+        color 0.15s ease, 
+        border-color 0.15s ease;
 
     border: 1.5px solid var(--type-color, #bbb);
 }
@@ -132,30 +209,83 @@
 
 
 /* 타입색 */
-.type_chip.normal   { --type-color: #bbb; }
-.type_chip.fire     { --type-color: #ff612c; }
-.type_chip.water    { --type-color: #2992ff; }
-.type_chip.grass    { --type-color: #42bf24; }
-.type_chip.electric { --type-color: #ffdb00; }
-.type_chip.ice      { --type-color: #42d8ff; }
-.type_chip.fighting { --type-color: #ffa202; }
-.type_chip.poison   { --type-color: #994dcf; }
-.type_chip.ground   { --type-color: #ab7939; }
-.type_chip.flying   { --type-color: #95c9ff; }
-.type_chip.psychic  { --type-color: #ff637f; }
-.type_chip.bug      { --type-color: #9fa424; }
-.type_chip.rock     { --type-color: #bcb889; }
-.type_chip.ghost    { --type-color: #6e4570; }
-.type_chip.dragon   { --type-color: #5462d6; }
-.type_chip.dark     { --type-color: #4f4747; }
-.type_chip.steel    { --type-color: #6aaed3; }
-.type_chip.fairy    { --type-color: #ffb1ff; }
+.type_chip.normal {
+    --type-color: #bbb;
+}
+
+.type_chip.fire {
+    --type-color: #ff612c;
+}
+
+.type_chip.water {
+    --type-color: #2992ff;
+}
+
+.type_chip.grass {
+    --type-color: #42bf24;
+}
+
+.type_chip.electric {
+    --type-color: #ffdb00;
+}
+
+.type_chip.ice {
+    --type-color: #42d8ff;
+}
+
+.type_chip.fighting {
+    --type-color: #ffa202;
+}
+
+.type_chip.poison {
+    --type-color: #994dcf;
+}
+
+.type_chip.ground {
+    --type-color: #ab7939;
+}
+
+.type_chip.flying {
+    --type-color: #95c9ff;
+}
+
+.type_chip.psychic {
+    --type-color: #ff637f;
+}
+
+.type_chip.bug {
+    --type-color: #9fa424;
+}
+
+.type_chip.rock {
+    --type-color: #bcb889;
+}
+
+.type_chip.ghost {
+    --type-color: #6e4570;
+}
+
+.type_chip.dragon {
+    --type-color: #5462d6;
+}
+
+.type_chip.dark {
+    --type-color: #4f4747;
+}
+
+.type_chip.steel {
+    --type-color: #6aaed3;
+}
+
+.type_chip.fairy {
+    --type-color: #ffb1ff;
+}
 
 /* 검색 / 초기화 버튼 */
 .filter_actions {
     display: flex;
     justify-content: center;
-    align-items: center;   /* ← 이거 추가 */
+    align-items: center;
     gap: 12px;
     margin-top: 24px;
 }
@@ -197,4 +327,3 @@
     background: #e4e4e4;
     color: #222;
 }
-

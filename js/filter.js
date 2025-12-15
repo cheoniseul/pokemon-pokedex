@@ -4,7 +4,24 @@ console.log('filter.js loaded');
 let selectedRegion = 'all';
 let selectedTypes = [];
 
-/* 지방 필터 (단일 + 토글) */
+/* 상세 필터 열기 / 닫기 */
+function initFilterToggle() {
+    const toggleBtn = document.querySelector('.filter_toggle_btn');
+    const detailArea = document.querySelector('.filter_detail');
+    const icon = toggleBtn?.querySelector('i');
+
+    if (!toggleBtn || !detailArea) return;
+
+    toggleBtn.addEventListener('click', () => {
+        detailArea.classList.toggle('open');
+
+        if (icon) {
+            icon.classList.toggle('rotated');
+        }
+    });
+}
+
+/* 지방 필터 (단일 선택 + 토글) */
 function initRegionFilter() {
     const regionButtons = document.querySelectorAll('.region_chip');
 
@@ -13,19 +30,14 @@ function initRegionFilter() {
             const region = button.dataset.region;
             const isActive = button.classList.contains('active');
 
-            // 모두 비활성화
             regionButtons.forEach(btn => btn.classList.remove('active'));
 
             if (isActive) {
-                // 다시 클릭 → 선택 해제
                 selectedRegion = 'all';
-
-                // 전체 버튼 다시 활성화
                 document
                     .querySelector('.region_chip[data-region="all"]')
-                    .classList.add('active');
+                    ?.classList.add('active');
             } else {
-                // 새로운 지방 선택
                 button.classList.add('active');
                 selectedRegion = region;
             }
@@ -43,16 +55,13 @@ function initTypeFilter() {
         button.addEventListener('click', () => {
             const type = button.dataset.type;
 
-            // UI 토글
             button.classList.toggle('active');
 
             if (button.classList.contains('active')) {
-                // 추가
                 if (!selectedTypes.includes(type)) {
                     selectedTypes.push(type);
                 }
             } else {
-                // 제거
                 selectedTypes = selectedTypes.filter(t => t !== type);
             }
 
@@ -63,7 +72,7 @@ function initTypeFilter() {
 
 /* 초기화 버튼 */
 function initResetButton() {
-    const resetBtn = document.querySelector('.action_btn:not(.primary)');
+    const resetBtn = document.querySelector('.filter_actions .action_btn:not(.primary)');
     if (!resetBtn) return;
 
     resetBtn.addEventListener('click', () => {
@@ -76,7 +85,7 @@ function initResetButton() {
 
         document
             .querySelector('.region_chip[data-region="all"]')
-            .classList.add('active');
+            ?.classList.add('active');
 
         document
             .querySelectorAll('.type_chip')
@@ -90,5 +99,3 @@ function initResetButton() {
         console.log('타입:', selectedTypes);
     });
 }
-
-
