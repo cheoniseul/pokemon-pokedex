@@ -9,7 +9,7 @@ async function loadAllComponents() {
     await loadComponent("header", "components/header.html");
     await loadComponent("filter", "components/filter.html");
 
-    // filter DOM
+    // filter DOM 로드
     if (window.initRegionFilter) {
         initFilterToggle();
         initRegionFilter();
@@ -18,6 +18,12 @@ async function loadAllComponents() {
     }
 
     await loadComponent("card-list", "components/card-list.html");
+
+    // 카드 리스트 DOM 로드
+    if (window.initCardList) {
+        initCardList();
+    }
+
     await loadComponent("footer", "components/footer.html");
 }
 

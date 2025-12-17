@@ -1,3 +1,121 @@
-<section class="card-list">
+<section class="card_list" id="card_list">
+<article class="pokemon_card" data-id="25">
+        <div class="pokemon_img">
+            <img
+                src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/25.png"
+                alt="피카츄"
+            >
+        </div>
 
+        <div class="pokemon_info">
+            <span class="pokemon_no">도감번호 0025</span>
+            <h3 class="pokemon_name">피카츄</h3>
+
+            <div class="pokemon_types">
+                <span class="type_chip electric">전기</span>
+            </div>
+        </div>
+    </article>
+
+    <!-- ✅ 듀얼 타입 (임시 테스트용) -->
+    <article class="pokemon_card" data-id="6">
+        <div class="pokemon_img">
+            <img
+                src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/6.png"
+                alt="리자몽"
+            >
+        </div>
+
+        <div class="pokemon_info">
+            <span class="pokemon_no">도감번호 0006</span>
+            <h3 class="pokemon_name">리자몽</h3>
+
+            <div class="pokemon_types">
+                <span class="type_chip fire">불꽃</span>
+                <span class="type_chip flying">비행</span>
+            </div>
+        </div>
+    </article>
 </section>
+
+<!-- 포켓몬 상세 모달 -->
+<div class="pokemon_modal" id="pokemonModal" aria-hidden="true">
+
+    <!-- 배경 -->
+    <div class="pokemon_modal_bg"></div>
+
+    <!-- 모달 본문 -->
+    <div class="pokemon_modal_content">
+
+        <!-- 닫기 버튼 -->
+        <button type="button" class="modal_close" aria-label="닫기">
+            &times;
+        </button>
+
+        <!-- ===== 상단 기본 정보 ===== -->
+        <div class="modal_header">
+
+            <div class="modal_img_wrap">
+                <img class="modal_img" src="" alt="">
+            </div>
+
+            <div class="modal_basic">
+                <span class="modal_no"></span>
+                <h2 class="modal_name"></h2>
+
+                <div class="modal_types">
+                    <!-- type_chip JS로 삽입 -->
+                </div>
+            </div>
+        </div>
+
+        <!-- ===== 상세 정보 ===== -->
+        <div class="modal_details">
+
+            <div class="detail_item">
+                <span class="detail_label">분류</span>
+                <span class="detail_value modal_species"></span>
+            </div>
+
+            <div class="detail_item">
+                <span class="detail_label">키</span>
+                <span class="detail_value modal_height"></span>
+            </div>
+
+            <div class="detail_item">
+                <span class="detail_label">몸무게</span>
+                <span class="detail_value modal_weight"></span>
+            </div>
+
+            <div class="detail_item">
+                <span class="detail_label">성별</span>
+                <span class="detail_value modal_gender"></span>
+            </div>
+
+            <div class="detail_item">
+                <span class="detail_label">특성</span>
+                <span class="detail_value modal_abilities"></span>
+            </div>
+
+        </div>
+
+        <!-- ===== 진화 과정 ===== -->
+        <div class="modal_evolution">
+
+            <h3 class="evolution_title">진화 과정</h3>
+
+            <div class="evolution_list">
+                <!-- JS로 진화 카드 삽입 -->
+                <!--
+                <div class="evolution_item" data-id="172">
+                    <img src="..." alt="피츄">
+                    <span>피츄</span>
+                </div>
+                <div class="evolution_arrow">→</div>
+                -->
+            </div>
+
+        </div>
+
+    </div>
+</div>
