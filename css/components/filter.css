@@ -3,7 +3,7 @@
     position: relative;
     max-width: 1200px;
     margin: 0 auto 40px;
-    padding: 24px 20px;
+    padding: 40px 20px 20px;
 
     display: flex;
     flex-direction: column;
@@ -348,4 +348,221 @@
 .action_btn:not(.primary):hover {
     background: #e4e4e4;
     color: #222;
+}
+
+/* 기본: PC */
+.pc_only {
+    display: inline-flex;
+}
+
+.mobile_only {
+    display: none;
+}
+
+/* 반응형 */
+/* 테블릿 */
+@media (max-width: 1024px) {
+
+    .filters {
+        padding: 35px 16px 0 16px;
+    }
+
+    /* 상단 검색 + 버튼 */
+    .filter_top {
+        min-height: 56px;
+        position: relative;
+    }
+
+    .search_wrap.large {
+        max-width: 460px;
+    }
+
+    .search-input {
+        height: 46px;
+        font-size: 15px;
+    }
+
+    .filter_toggle_btn {
+        all: unset;
+        position: absolute;
+        top: 50%;
+        right: 16px;
+        transform: translateY(-50%);
+
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+
+        height: 38px;
+        padding: 0 14px;
+        border-radius: 20px;
+
+        background: #2b2b2b;
+        color: #fff;
+        font-size: 13px;
+        font-weight: 600;
+        cursor: pointer;
+    }
+
+    .filter_toggle_btn i {
+        font-size: 12px;
+    }
+
+    .mobile_only {
+        display: none;
+    }
+
+    /* 필터 그룹 */
+    .filter_group {
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+        padding: 10px 30px;
+    }
+
+    .filter_title {
+        font-size: 18px;
+        min-width: 56px;
+        padding-left: 5px;
+    }
+
+    .region_chip,
+    .type_chip {
+        height: 36px;
+        padding: 0 12px;
+        font-size: 14px;
+    }
+
+    /* 액션 버튼 */
+    .filter_actions {
+        margin-top: 40px;
+        gap: 10px;
+        padding-bottom: 20px;
+    }
+
+    .action_btn {
+        height: 38px;
+        font-size: 14px;
+        padding: 0 20px;
+    }
+}
+
+/* 모바일 */
+@media (max-width: 768px) {
+
+    .filters {
+        padding: 16px 14px 0 14px;
+    }
+
+    /* 상단 영역 세로 정렬 */
+    .filter_top {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 14px;
+        min-height: auto;
+    }
+
+    /* 검색 중앙 */
+    .search_center {
+        justify-content: stretch;
+    }
+
+    .search_wrap.large {
+        max-width: 100%;
+    }
+
+    .search-input {
+        height: 44px;
+        font-size: 14px;
+        padding-left: 16px;
+    }
+
+    .search_icon_btn {
+        right: 14px;
+        font-size: 16px;
+    }
+
+    /* 토글 버튼 */
+    .filter_toggle_btn {
+        all: unset;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 6px;
+
+        font-size: 14px;
+        font-weight: 600;
+        color: #444;
+        cursor: pointer;
+
+        margin: 12px auto 0;
+    }
+
+    .filter_toggle_btn i {
+        font-size: 12px;
+        transition: transform 0.2s ease;
+    }
+
+    .pc_only {
+        display: inline-flex;
+    }
+
+    .mobile_only {
+        display: none;
+        justify-content: center;
+        align-items: center;
+        gap: 6px;
+
+        margin: 20px auto 20px;
+
+        font-size: 14px;
+        font-weight: 600;
+        color: #444;
+
+        cursor: pointer;
+    }
+
+    /* 버튼처럼 안 보이게 */
+    .mobile_only {
+        background: none;
+        border: none;
+        padding: 0;
+    }
+
+    /* 필터 그룹  */
+    .filter_group {
+        flex-direction: column;
+        gap: 10px;
+        margin: 15px 0;
+    }
+
+    .filter_title {
+        font-size: 15px;
+        padding-top: 0;
+    }
+
+    .region_options,
+    .type_options {
+        gap: 8px;
+    }
+
+    .region_chip,
+    .type_chip {
+        height: 34px;
+        padding: 0 12px;
+        font-size: 13.5px;
+    }
+
+    /* 액션 버튼 */
+    .filter_actions {
+        flex-direction: column;
+        gap: 10px;
+        margin-top: 36px;
+    }
+
+    .action_btn {
+        width: 100%;
+        height: 40px;
+        font-size: 14px;
+    }
 }

@@ -6,20 +6,43 @@ let selectedTypes = [];
 
 /* 상세 필터 열기 / 닫기 */
 function initFilterToggle() {
-    const toggleBtn = document.querySelector('.filter_toggle_btn');
+    const toggleBtns = document.querySelectorAll('.filter_toggle_btn');
     const detailArea = document.querySelector('.filter_detail');
-    const icon = toggleBtn?.querySelector('i');
+    const pcBtn = document.querySelector('.pc_only');
+    const mobileBtn = document.querySelector('.mobile_only');
 
-    if (!toggleBtn || !detailArea) return;
+    if (!detailArea || !toggleBtns.length) return;
 
-    toggleBtn.addEventListener('click', () => {
-        detailArea.classList.toggle('open');
+    toggleBtns.forEach(btn => {
+        btn.addEventListener('click', () => {
+            const isOpen = detailArea.classList.toggle('open');
 
-        if (icon) {
-            icon.classList.toggle('rotated');
-        }
+            // 아이콘 회전 동기화
+            toggleBtns.forEach(b => {
+                const icon = b.querySelector('i');
+                if (icon) icon.classList.toggle('rotated', isOpen);
+            });
+
+            // 모바일 전용 버튼 전환
+            if (window.innerWidth <= 768) {
+                if (pcBtn) pcBtn.style.display = isOpen ? 'none' : 'inline-flex';
+                if (mobileBtn) mobileBtn.style.display = isOpen ? 'flex' : 'none';
+            }
+
+            // 열릴 때만 자동 스크롤
+            if (isOpen && window.innerWidth <= 768) {
+                setTimeout(() => {
+                    detailArea.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }, 100);
+            }
+        });
     });
 }
+
+
 
 /* 지방 필터 (단일 선택 + 토글) */
 function initRegionFilter() {
