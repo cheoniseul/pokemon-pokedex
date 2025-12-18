@@ -1,92 +1,97 @@
-// filter.js
-console.log('filter.js loaded');
+// filter.js (MODULE)
 
-let selectedRegion = 'all';
+/* 필터 상태 */
+let selectedRegion = "all";
 let selectedTypes = [];
+let onFilterChange = null;
 
-/* 상세 필터 열기 / 닫기 */
-function initFilterToggle() {
-    const toggleBtns = document.querySelectorAll('.filter_toggle_btn');
-    const detailArea = document.querySelector('.filter_detail');
-    const pcBtn = document.querySelector('.pc_only');
-    const mobileBtn = document.querySelector('.mobile_only');
+let searchKeyword = "";
+
+
+/* 외부에서 상태 읽기 */
+export function getFilterState() {
+    return {
+        region: selectedRegion,
+        types: [...selectedTypes],
+        keyword: searchKeyword
+    };
+}
+
+/* 필터 변경 콜백 등록 */
+export function setFilterChangeHandler(handler) {
+    onFilterChange = handler;
+}
+
+/* 내부 공통 호출 */
+function notifyFilterChange() {
+    if (typeof onFilterChange === "function") {
+        onFilterChange(getFilterState());
+    }
+}
+
+/* 상세 필터 토글 */
+export function initFilterToggle() {
+    const toggleBtns = document.querySelectorAll(".filter_toggle_btn");
+    const detailArea = document.querySelector(".filter_detail");
+    const pcBtn = document.querySelector(".pc_only");
+    const mobileBtn = document.querySelector(".mobile_only");
 
     if (!detailArea || !toggleBtns.length) return;
 
     toggleBtns.forEach(btn => {
-        btn.addEventListener('click', () => {
-            const isOpen = detailArea.classList.toggle('open');
+        btn.addEventListener("click", () => {
+            const isOpen = detailArea.classList.toggle("open");
 
-            // 아이콘 회전 동기화
             toggleBtns.forEach(b => {
-                const icon = b.querySelector('i');
-                if (icon) icon.classList.toggle('rotated', isOpen);
+                const icon = b.querySelector("i");
+                if (icon) icon.classList.toggle("rotated", isOpen);
             });
 
-            // 모바일 전용 버튼 전환
             if (window.innerWidth <= 768) {
-                if (pcBtn) pcBtn.style.display = isOpen ? 'none' : 'inline-flex';
-                if (mobileBtn) mobileBtn.style.display = isOpen ? 'flex' : 'none';
-            }
-
-            // 열릴 때만 자동 스크롤
-            if (isOpen && window.innerWidth <= 768) {
-                setTimeout(() => {
-                    const offset = 80;
-                    const y =
-                        detailArea.getBoundingClientRect().top +
-                        window.pageYOffset -
-                        offset;
-
-                    window.scrollTo({
-                        top: y,
-                        behavior: 'smooth'
-                    });
-                }, 100);
+                if (pcBtn) pcBtn.style.display = isOpen ? "none" : "inline-flex";
+                if (mobileBtn) mobileBtn.style.display = isOpen ? "flex" : "none";
             }
         });
     });
 }
 
-
-
-/* 지방 필터 (단일 선택 + 토글) */
-function initRegionFilter() {
-    const regionButtons = document.querySelectorAll('.region_chip');
+/* 지방 필터 */
+export function initRegionFilter() {
+    const regionButtons = document.querySelectorAll(".region_chip");
 
     regionButtons.forEach(button => {
-        button.addEventListener('click', () => {
+        button.addEventListener("click", () => {
             const region = button.dataset.region;
-            const isActive = button.classList.contains('active');
+            const isActive = button.classList.contains("active");
 
-            regionButtons.forEach(btn => btn.classList.remove('active'));
+            regionButtons.forEach(btn => btn.classList.remove("active"));
 
             if (isActive) {
-                selectedRegion = 'all';
+                selectedRegion = "all";
                 document
                     .querySelector('.region_chip[data-region="all"]')
-                    ?.classList.add('active');
+                    ?.classList.add("active");
             } else {
-                button.classList.add('active');
+                button.classList.add("active");
                 selectedRegion = region;
             }
 
-            console.log('선택된 지방:', selectedRegion);
+            notifyFilterChange();
         });
     });
 }
 
-/* 타입 필터 (다중 선택) */
-function initTypeFilter() {
-    const typeButtons = document.querySelectorAll('.type_chip');
+/* 타입 필터 */
+export function initTypeFilter() {
+    const typeButtons = document.querySelectorAll(".type_chip");
 
     typeButtons.forEach(button => {
-        button.addEventListener('click', () => {
+        button.addEventListener("click", () => {
             const type = button.dataset.type;
 
-            button.classList.toggle('active');
+            button.classList.toggle("active");
 
-            if (button.classList.contains('active')) {
+            if (button.classList.contains("active")) {
                 if (!selectedTypes.includes(type)) {
                     selectedTypes.push(type);
                 }
@@ -94,37 +99,54 @@ function initTypeFilter() {
                 selectedTypes = selectedTypes.filter(t => t !== type);
             }
 
-            console.log('선택된 타입:', selectedTypes);
+            notifyFilterChange();
         });
     });
 }
 
-/* 초기화 버튼 */
-function initResetButton() {
-    const resetBtn = document.querySelector('.filter_actions .action_btn:not(.primary)');
+/* 검색 필터 (이름) */
+export function initSearchFilter() {
+    const searchInput = document.getElementById("search");
+    if (!searchInput) return;
+
+    // 입력할 때마다 즉시 반영
+    searchInput.addEventListener("input", (e) => {
+        searchKeyword = e.target.value
+            .trim()
+            .toLowerCase();
+
+        notifyFilterChange();
+    });
+}
+
+/* 초기화 */
+export function initResetButton() {
+    const resetBtn = document.querySelector(
+        ".filter_actions .action_btn:not(.primary)"
+    );
     if (!resetBtn) return;
 
-    resetBtn.addEventListener('click', () => {
-        selectedRegion = 'all';
+    resetBtn.addEventListener("click", () => {
+        selectedRegion = "all";
         selectedTypes = [];
 
         document
-            .querySelectorAll('.region_chip')
-            .forEach(btn => btn.classList.remove('active'));
+            .querySelectorAll(".region_chip")
+            .forEach(btn => btn.classList.remove("active"));
 
         document
             .querySelector('.region_chip[data-region="all"]')
-            ?.classList.add('active');
+            ?.classList.add("active");
 
         document
-            .querySelectorAll('.type_chip')
-            .forEach(btn => btn.classList.remove('active'));
+            .querySelectorAll(".type_chip")
+            .forEach(btn => btn.classList.remove("active"));
 
-        const searchInput = document.getElementById('search');
-        if (searchInput) searchInput.value = '';
+        const searchInput = document.getElementById("search");
+        if (searchInput) searchInput.value = "";
 
-        console.log('필터 초기화');
-        console.log('지방:', selectedRegion);
-        console.log('타입:', selectedTypes);
+        searchKeyword = "";
+
+        notifyFilterChange();
     });
 }

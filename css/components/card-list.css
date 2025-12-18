@@ -149,7 +149,7 @@
     transform: translateY(20px) scale(0.96);
     opacity: 0;
     transition:
-        transform 0.28s cubic-bezier(.2,.7,.2,1),
+        transform 0.28s cubic-bezier(.2, .7, .2, 1),
         opacity 0.2s ease;
 }
 
@@ -265,7 +265,7 @@
 }
 
 .pokemon_modal.show .modal_type_bar {
-  transform: scaleX(1);
+    transform: scaleX(1);
 }
 
 .pokemon_modal_content.dual-type .modal_type_bar {
@@ -485,6 +485,9 @@
         width: 100%;
         border-radius: 14px;
         padding: 22px 16px 20px;
+
+        max-height: 70vh;
+        overflow-y: auto;
     }
 
     .modal_title_bar {
@@ -641,4 +644,3 @@
         align-items: center;
     }
 }
-
