@@ -15,28 +15,28 @@ function initCardList() {
     const modalTypes = modal.querySelector(".modal_types");
 
     cards.forEach(card => {
-        const typeChips = card.querySelectorAll(".type_chip");
+    const typeChips = card.querySelectorAll(".type_chip");
 
-        if (typeChips.length >= 1) {
-            card.style.setProperty(
-                "--type-color-1",
-                getComputedStyle(typeChips[0]).backgroundColor
-            );
-        }
+    if (typeChips.length >= 1) {
+        const color1 = getComputedStyle(typeChips[0]).backgroundColor;
 
-        if (typeChips.length >= 2) {
-            card.style.setProperty(
-                "--type-color-2",
-                getComputedStyle(typeChips[1]).backgroundColor
-            );
-            card.classList.add("dual-type");
-        }
+        card.style.setProperty("--type-color-1", color1);
 
-        card.addEventListener("click", () => {
-            openModalFromCard(card);
-        });
+        card.style.setProperty("--type-color", color1);
+    }
+
+    if (typeChips.length >= 2) {
+        card.style.setProperty(
+            "--type-color-2",
+            getComputedStyle(typeChips[1]).backgroundColor
+        );
+        card.classList.add("dual-type");
+    }
+
+    card.addEventListener("click", () => {
+        openModalFromCard(card);
     });
-
+});
 
     function openModalFromCard(card) {
         const img = card.querySelector(".pokemon_img img");
@@ -52,13 +52,36 @@ function initCardList() {
         modalTypes.innerHTML = "";
         types.forEach(type => modalTypes.appendChild(type.cloneNode(true)));
 
-        modal.classList.add("active");
+        const modalContent = modal.querySelector(".pokemon_modal_content");
+
+        // 초기화
+        modalContent.classList.remove("dual-type");
+        modalContent.style.removeProperty("--type-color-1");
+        modalContent.style.removeProperty("--type-color-2");
+
+        // 카드에 이미 세팅된 값 재사용
+        const cardColor1 = getComputedStyle(card).getPropertyValue("--type-color-1");
+        const cardColor2 = getComputedStyle(card).getPropertyValue("--type-color-2");
+
+        // 단일 타입
+        if (types.length === 1) {
+            modalContent.style.setProperty("--type-color", cardColor1);
+        }
+
+        // 듀얼 타입
+        if (types.length >= 2) {
+            modalContent.classList.add("dual-type");
+            modalContent.style.setProperty("--type-color-1", cardColor1);
+            modalContent.style.setProperty("--type-color-2", cardColor2);
+        }
+
+        modal.classList.add("show");
         modal.setAttribute("aria-hidden", "false");
         document.body.style.overflow = "hidden";
     }
 
     function closeModal() {
-        modal.classList.remove("active");
+        modal.classList.remove("show");
         modal.setAttribute("aria-hidden", "true");
         document.body.style.overflow = "";
     }

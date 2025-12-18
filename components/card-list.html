@@ -1,10 +1,7 @@
 <section class="card_list" id="card_list">
-<article class="pokemon_card" data-id="25">
+    <article class="pokemon_card" data-id="25">
         <div class="pokemon_img">
-            <img
-                src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/25.png"
-                alt="피카츄"
-            >
+            <img src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/25.png" alt="피카츄">
         </div>
 
         <div class="pokemon_info">
@@ -17,13 +14,10 @@
         </div>
     </article>
 
-    <!-- ✅ 듀얼 타입 (임시 테스트용) -->
+    <!-- 듀얼 타입 (임시 테스트용) -->
     <article class="pokemon_card" data-id="6">
         <div class="pokemon_img">
-            <img
-                src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/6.png"
-                alt="리자몽"
-            >
+            <img src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/6.png" alt="리자몽">
         </div>
 
         <div class="pokemon_info">
@@ -52,68 +46,98 @@
             &times;
         </button>
 
-        <!-- ===== 상단 기본 정보 ===== -->
-        <div class="modal_header">
+        <!-- 상단 타이틀 & 페이징 -->
+        <header class="modal_title_bar">
 
-            <div class="modal_img_wrap">
-                <img class="modal_img" src="" alt="">
-            </div>
+            <!-- 이전 포켓몬 -->
+            <button type="button" class="modal_nav prev" aria-label="이전 포켓몬">
+                <i class="fa-solid fa-chevron-left"></i>
+            </button>
 
-            <div class="modal_basic">
+            <!-- 도감 번호 & 이름 -->
+            <div class="modal_title">
                 <span class="modal_no"></span>
                 <h2 class="modal_name"></h2>
+            </div>
 
-                <div class="modal_types">
-                    <!-- type_chip JS로 삽입 -->
+            <!-- 다음 포켓몬 -->
+            <button type="button" class="modal_nav next" aria-label="다음 포켓몬">
+                <i class="fa-solid fa-chevron-right"></i>
+            </button>
+
+        </header>
+
+        <div class="modal_type_bar"></div>
+
+        <!-- 메인 콘텐츠 영역 -->
+        <div class="modal_body">
+
+            <!-- 메인 정보 -->
+            <section class="modal_main">
+
+                <!-- 이미지 -->
+                <div class="modal_img_wrap">
+                    <img class="modal_img" src="" alt="">
                 </div>
-            </div>
-        </div>
 
-        <!-- ===== 상세 정보 ===== -->
-        <div class="modal_details">
+                <!-- 짧은 설명 -->
+                <p class="modal_summary">
+                    <!-- JS로 요약 문구 삽입 -->
+                </p>
 
-            <div class="detail_item">
-                <span class="detail_label">분류</span>
-                <span class="detail_value modal_species"></span>
-            </div>
+                <!-- 상세 스펙 -->
+                <div class="modal_details">
 
-            <div class="detail_item">
-                <span class="detail_label">키</span>
-                <span class="detail_value modal_height"></span>
-            </div>
+                    <div class="detail_item">
+                        <span class="detail_label">타입</span>
+                        <span class="detail_value modal_types_detail"></span>
+                    </div>
 
-            <div class="detail_item">
-                <span class="detail_label">몸무게</span>
-                <span class="detail_value modal_weight"></span>
-            </div>
+                    <div class="detail_item">
+                        <span class="detail_label">분류</span>
+                        <span class="detail_value modal_species"></span>
+                    </div>
 
-            <div class="detail_item">
-                <span class="detail_label">성별</span>
-                <span class="detail_value modal_gender"></span>
-            </div>
+                    <div class="detail_item">
+                        <span class="detail_label">키</span>
+                        <span class="detail_value modal_height"></span>
+                    </div>
 
-            <div class="detail_item">
-                <span class="detail_label">특성</span>
-                <span class="detail_value modal_abilities"></span>
-            </div>
+                    <div class="detail_item">
+                        <span class="detail_label">몸무게</span>
+                        <span class="detail_value modal_weight"></span>
+                    </div>
 
-        </div>
+                    <div class="detail_item">
+                        <span class="detail_label">성별</span>
+                        <span class="detail_value modal_gender"></span>
+                    </div>
 
-        <!-- ===== 진화 과정 ===== -->
-        <div class="modal_evolution">
+                    <div class="detail_item">
+                        <span class="detail_label">특성</span>
+                        <span class="detail_value modal_abilities"></span>
+                    </div>
 
-            <h3 class="evolution_title">진화 과정</h3>
-
-            <div class="evolution_list">
-                <!-- JS로 진화 카드 삽입 -->
-                <!--
-                <div class="evolution_item" data-id="172">
-                    <img src="..." alt="피츄">
-                    <span>피츄</span>
                 </div>
-                <div class="evolution_arrow">→</div>
-                -->
-            </div>
+
+            </section>
+
+            <!-- 서브 정보 : 진화 과정 -->
+            <aside class="modal_evolution">
+
+                <h3 class="evolution_title">진화 과정</h3>
+
+                <div class="evolution_list">
+                    <!-- JS로 진화 카드 삽입 -->
+                    <!--
+                    <div class="evolution_item" data-id="172">
+                        <img src="..." alt="피츄">
+                        <span>피츄</span>
+                    </div>
+                    -->
+                </div>
+
+            </aside>
 
         </div>
 
