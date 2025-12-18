@@ -12,31 +12,30 @@ function initCardList() {
     const modalImg = modal.querySelector(".modal_img");
     const modalNo = modal.querySelector(".modal_no");
     const modalName = modal.querySelector(".modal_name");
-    const modalTypes = modal.querySelector(".modal_types");
 
     cards.forEach(card => {
-    const typeChips = card.querySelectorAll(".type_chip");
+        const typeChips = card.querySelectorAll(".type_chip");
 
-    if (typeChips.length >= 1) {
-        const color1 = getComputedStyle(typeChips[0]).backgroundColor;
+        if (typeChips.length >= 1) {
+            const color1 = getComputedStyle(typeChips[0]).backgroundColor;
 
-        card.style.setProperty("--type-color-1", color1);
+            card.style.setProperty("--type-color-1", color1);
 
-        card.style.setProperty("--type-color", color1);
-    }
+            card.style.setProperty("--type-color", color1);
+        }
 
-    if (typeChips.length >= 2) {
-        card.style.setProperty(
-            "--type-color-2",
-            getComputedStyle(typeChips[1]).backgroundColor
-        );
-        card.classList.add("dual-type");
-    }
+        if (typeChips.length >= 2) {
+            card.style.setProperty(
+                "--type-color-2",
+                getComputedStyle(typeChips[1]).backgroundColor
+            );
+            card.classList.add("dual-type");
+        }
 
-    card.addEventListener("click", () => {
-        openModalFromCard(card);
+        card.addEventListener("click", () => {
+            openModalFromCard(card);
+        });
     });
-});
 
     function openModalFromCard(card) {
         const img = card.querySelector(".pokemon_img img");
@@ -49,8 +48,15 @@ function initCardList() {
         modalNo.textContent = no;
         modalName.textContent = name;
 
-        modalTypes.innerHTML = "";
-        types.forEach(type => modalTypes.appendChild(type.cloneNode(true)));
+        const modalTypesDetail = modal.querySelector(".modal_types_detail");
+
+        // 초기화
+        modalTypesDetail.innerHTML = "";
+
+        // 카드에 있는 타입 칩 그대로 복사
+        types.forEach(type => {
+            modalTypesDetail.appendChild(type.cloneNode(true));
+        });
 
         const modalContent = modal.querySelector(".pokemon_modal_content");
 
@@ -66,6 +72,7 @@ function initCardList() {
         // 단일 타입
         if (types.length === 1) {
             modalContent.style.setProperty("--type-color", cardColor1);
+            modalContent.style.removeProperty("--type-color-2");
         }
 
         // 듀얼 타입
@@ -105,13 +112,40 @@ function seedCards(count = 18) {
         // 혹시 모를 중복 id 제거
         clone.querySelectorAll("[id]").forEach(el => el.removeAttribute("id"));
 
-        // 카드 구분용 텍스트 변경 (선택)
+        // 번호 / 이름 변경
         const noEl = clone.querySelector(".pokemon_no");
         const nameEl = clone.querySelector(".pokemon_name");
 
-        if (noEl) noEl.textContent = String(i + 1).padStart(3, "0");
+        if (noEl) noEl.textContent = `도감번호 ${String(i + 1).padStart(4, "0")}`;
         if (nameEl) nameEl.textContent = `Sample ${i + 1}`;
+
+        // 타입 랜덤 생성
+        const types = ["fire", "water", "grass", "electric", "bug", "normal"];
+
+        const typeWrap = clone.querySelector(".pokemon_types");
+        typeWrap.innerHTML = "";
+
+        // 첫 번째 타입
+        const t1 = types[Math.floor(Math.random() * types.length)];
+        const chip1 = document.createElement("span");
+        chip1.className = `type_chip ${t1}`;
+        chip1.textContent = t1;
+        typeWrap.appendChild(chip1);
+
+        // 확률 듀얼 타입
+        if (Math.random() > 0.5) {
+            let t2;
+            do {
+                t2 = types[Math.floor(Math.random() * types.length)];
+            } while (t2 === t1);
+
+            const chip2 = document.createElement("span");
+            chip2.className = `type_chip ${t2}`;
+            chip2.textContent = t2;
+            typeWrap.appendChild(chip2);
+        }
 
         list.appendChild(clone);
     }
+
 }

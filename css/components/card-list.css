@@ -24,21 +24,19 @@
     box-shadow: 0 4px 14px rgba(0, 0, 0, 0.06);
     transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
- 
+
 .pokemon_card:hover {
-     background:
+    background:
         linear-gradient(#fff, #fff) padding-box,
         var(--type-color, #ddd) border-box;
     transform: translateY(-4px);
     box-shadow: 0 10px 24px rgba(0, 0, 0, 0.12);
 }
-ａａａａ、、、、
+
 .pokemon_card.dual-type:hover {
     background:
         linear-gradient(#fff, #fff) padding-box,
-        linear-gradient(90deg,
-            var(--type-color-1),
-            var(--type-color-2)) border-box;
+        linear-gradient(90deg, var(--type-color-1), var(--type-color-2)) border-box;
     box-shadow:
         0 10px 24px rgba(0, 0, 0, 0.12),
         0 0 0 1px rgba(0, 0, 0, 0.02);
@@ -103,7 +101,17 @@
     position: fixed;
     inset: 0;
     z-index: 9999;
-    display: none;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.25s ease;
+
+    padding: 20px;
+    overflow-y: auto;
 }
 
 /* 모달 표시 상태 */
@@ -111,6 +119,9 @@
     display: flex;
     align-items: center;
     justify-content: center;
+
+    opacity: 1;
+    pointer-events: auto;
 }
 
 /* 배경 딤 */
@@ -118,6 +129,12 @@
     position: absolute;
     inset: 0;
     background: rgba(0, 0, 0, 0.6);
+    opacity: 0;
+    transition: opacity 0.25s ease;
+}
+
+.pokemon_modal.show .pokemon_modal_bg {
+    opacity: 1;
 }
 
 /* 모달 본문 */
@@ -128,6 +145,17 @@
     border-radius: 16px;
     padding: 30px 34px 34px;
     box-shadow: 0 20px 45px rgba(0, 0, 0, 0.25);
+
+    transform: translateY(20px) scale(0.96);
+    opacity: 0;
+    transition:
+        transform 0.28s cubic-bezier(.2,.7,.2,1),
+        opacity 0.2s ease;
+}
+
+.pokemon_modal.show .pokemon_modal_content {
+    transform: translateY(0) scale(1);
+    opacity: 1;
 }
 
 /* 닫기 버튼 */
@@ -175,9 +203,9 @@
     align-items: center;
     justify-content: center;
     transition: transform 0.08s ease,
-                background 0.15s ease,
-                border-color 0.15s ease,
-                color 0.15s ease;
+        background 0.15s ease,
+        border-color 0.15s ease,
+        color 0.15s ease;
 }
 
 .modal_nav i {
@@ -214,31 +242,37 @@
     margin-bottom: 4px;
 }
 
-/* 상단 타입 컬러 바 */
-.modal_type_bar {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 6px;
-    border-radius: 16px 16px 0 0;
-    background: var(--type-color, #ddd);
-}
-
-.pokemon_modal_content.dual-type .modal_type_bar {
-    background: linear-gradient(
-        90deg,
-        var(--type-color-1),
-        var(--type-color-2)
-    );
-}
-
 .modal_name {
     margin: 0;
     font-size: 26px;
     font-weight: 800;
     color: #111;
 }
+
+/* 상단 타입 컬러 바 */
+.modal_type_bar {
+    grid-column: 1 / -1;
+    width: 800px;
+    height: 6px;
+    border-radius: 50px;
+    background: var(--type-color, #ddd);
+
+    margin: 8px auto 0;
+
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 0.45s ease;
+}
+
+.pokemon_modal.show .modal_type_bar {
+  transform: scaleX(1);
+}
+
+.pokemon_modal_content.dual-type .modal_type_bar {
+    background: linear-gradient(90deg, var(--type-color-1), var(--type-color-2));
+}
+
+
 
 /* 본문 레이아웃 */
 .modal_body {
@@ -324,8 +358,14 @@
 
 /* 상세 스펙 안 타입 칩 */
 .modal_details .type_chip {
-    padding: 4px 8px;
-    font-size: 12px;
+    font-size: 14px;
+    padding: 6px 12px;
+    border-radius: 999px;
+    font-weight: 600;
+
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
 }
 
 .detail_item {
@@ -386,8 +426,8 @@
     border: 1px solid #eeeeee;
     cursor: pointer;
     transition: background 0.15s ease,
-                border-color 0.15s ease,
-                transform 0.08s ease;
+        border-color 0.15s ease,
+        transform 0.08s ease;
 }
 
 .evolution_item:hover {
@@ -441,19 +481,27 @@
 }
 
 @media (max-width: 520px) {
+    .pokemon_modal_content {
+        width: 100%;
+        border-radius: 14px;
+        padding: 22px 16px 20px;
+    }
+
     .modal_title_bar {
-        grid-template-columns: 40px 1fr 40px;
+        grid-template-columns: 1fr;
         padding-bottom: 14px;
     }
 
     .modal_nav {
-        width: 40px;
-        height: 40px;
-        border-radius: 10px;
+        display: none;
     }
 
     .modal_name {
         font-size: 22px;
+    }
+
+    .modal_type_bar {
+        width: 100%;
     }
 
     .modal_img_wrap {
@@ -471,6 +519,14 @@
         padding: 10px 8px;
     }
 }
+
+@media (max-width: 420px) {
+    .modal_img_wrap {
+        width: 180px;
+        height: 180px;
+    }
+}
+
 
 /* 반응형 */
 /* 테블릿 */
@@ -585,3 +641,4 @@
         align-items: center;
     }
 }
+
