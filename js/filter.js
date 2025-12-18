@@ -32,9 +32,15 @@ function initFilterToggle() {
             // 열릴 때만 자동 스크롤
             if (isOpen && window.innerWidth <= 768) {
                 setTimeout(() => {
-                    detailArea.scrollIntoView({
-                        behavior: 'smooth',
-                        block: 'start'
+                    const offset = 80;
+                    const y =
+                        detailArea.getBoundingClientRect().top +
+                        window.pageYOffset -
+                        offset;
+
+                    window.scrollTo({
+                        top: y,
+                        behavior: 'smooth'
                     });
                 }, 100);
             }

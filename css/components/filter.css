@@ -509,6 +509,13 @@
         transition: transform 0.2s ease;
     }
 
+    /* 모바일 상세필터 버튼 long-press 방지 */
+    .filter_toggle_btn.mobile_only .btn_text {
+        pointer-events: none;
+        user-select: none;
+        -webkit-user-select: none;
+    }
+
     .pc_only {
         display: inline-flex;
     }
