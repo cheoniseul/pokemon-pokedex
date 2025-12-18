@@ -1,0 +1,364 @@
+/* 모달 전체 */
+.pokemon_modal {
+    position: fixed;
+    inset: 0;
+    z-index: 9999;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.25s ease;
+
+    padding: 20px;
+    overflow-y: auto;
+}
+
+/* 모달 표시 상태 */
+.pokemon_modal.show {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    opacity: 1;
+    pointer-events: auto;
+}
+
+/* 배경 */
+.pokemon_modal_bg {
+    position: absolute;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.6);
+    opacity: 0;
+    transition: opacity 0.25s ease;
+}
+
+.pokemon_modal.show .pokemon_modal_bg {
+    opacity: 1;
+}
+
+/* 모달 본문 */
+.pokemon_modal_content {
+    position: relative;
+    width: min(1100px, calc(100% - 40px));
+    background: #fff;
+    border-radius: 16px;
+    padding: 30px 34px 34px;
+    box-shadow: 0 20px 45px rgba(0, 0, 0, 0.25);
+
+    transform: translateY(20px) scale(0.96);
+    opacity: 0;
+    transition:
+        transform 0.28s cubic-bezier(.2, .7, .2, 1),
+        opacity 0.2s ease;
+}
+
+.pokemon_modal.show .pokemon_modal_content {
+    transform: translateY(0) scale(1);
+    opacity: 1;
+}
+
+/* 닫기 버튼 */
+.modal_close {
+    position: absolute;
+    top: 3px;
+    right: 5px;
+    width: 40px;
+    height: 40px;
+    border: 0;
+    border-radius: 10px;
+    background: transparent;
+    cursor: pointer;
+    font-size: 30px;
+    line-height: 1;
+    color: #8a8a8a;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.modal_close:hover {
+    color: #111;
+}
+
+/* 상단 타이틀 영역 */
+.modal_title_bar {
+    display: grid;
+    grid-template-columns: 44px 1fr 44px;
+    align-items: center;
+    gap: 10px;
+    padding: 6px 0 18px;
+}
+
+/* 이전 / 다음 버튼 */
+.modal_nav {
+    width: 46px;
+    height: 46px;
+    border: 1px solid #a7a7a7;
+    border-radius: 50px;
+    background: #b1b1b1;
+    cursor: pointer;
+    color: #fff;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    transition: transform 0.08s ease,
+        background 0.15s ease,
+        border-color 0.15s ease,
+        color 0.15s ease;
+}
+
+.modal_nav i {
+    font-size: 16px;
+}
+
+.modal_nav:hover {
+    background: #949494;
+    border-color: #868686;
+    color: #fff;
+}
+
+.modal_nav:active {
+    transform: translateY(1px);
+}
+
+.modal_nav:disabled,
+.modal_nav[aria-disabled="true"] {
+    opacity: 0.35;
+    cursor: not-allowed;
+    transform: none;
+}
+
+/* 도감 번호 / 이름 */
+.modal_title {
+    text-align: center;
+}
+
+.modal_no {
+    display: inline-block;
+    font-size: 16px;
+    color: #222;
+    letter-spacing: 0.02em;
+    margin-bottom: 4px;
+}
+
+.modal_name {
+    margin: 0;
+    font-size: 26px;
+    font-weight: 800;
+    color: #111;
+}
+
+/* 상단 타입 컬러 바 */
+.modal_type_bar {
+    grid-column: 1 / -1;
+    width: 990px;
+    height: 6px;
+    border-radius: 50px;
+    background: var(--type-color, #ddd);
+
+    margin: 8px auto 0;
+
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 0.45s ease;
+}
+
+.pokemon_modal.show .modal_type_bar {
+    transform: scaleX(1);
+}
+
+.pokemon_modal_content.dual-type .modal_type_bar {
+    background: linear-gradient(90deg, var(--type-color-1), var(--type-color-2));
+}
+
+/* 본문 레이아웃 */
+.modal_body {
+    display: grid;
+    grid-template-columns: 1fr 280px;
+    gap: 26px;
+    align-items: start;
+}
+
+/* 메인 정보 영역 */
+.modal_main {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    min-width: 0;
+}
+
+/* 포켓몬 이미지 */
+.modal_img_wrap {
+    width: 280px;
+    height: 280px;
+    border-radius: 16px;
+    background: #fafafa;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 6px 0 14px;
+}
+
+.modal_img {
+    width: 92%;
+    height: 92%;
+    object-fit: contain;
+    display: block;
+}
+
+/* 타입 칩 공통 스타일 */
+.type_chip {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 6px 10px;
+    border-radius: 999px;
+    font-size: 13px;
+    font-weight: 700;
+    line-height: 1;
+    color: #fff;
+}
+
+/* 요약 설명 */
+.modal_summary {
+    width: min(640px, 100%);
+    margin: 0 0 18px;
+    padding: 12px 14px;
+    border-radius: 12px;
+    background: #f4f6fb;
+    color: #4a4a4a;
+    font-size: 15px;
+    line-height: 1.6;
+    text-align: center;
+}
+
+/* 상세 스펙 */
+.modal_details {
+    width: min(640px, 100%);
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 12px 18px;
+    padding: 14px;
+    border: 1px solid #eeeeee;
+    border-radius: 14px;
+    background: #fff;
+}
+
+/* 상세 스펙 안 타입 영역 */
+.modal_details .modal_types_detail {
+    display: flex;
+    justify-content: flex-end;
+    gap: 6px;
+    flex-wrap: wrap;
+}
+
+/* 상세 스펙 안 타입 칩 */
+.modal_details .type_chip {
+    font-size: 15px;
+    padding: 6px 12px;
+    border-radius: 999px;
+    font-weight: 600;
+
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.detail_item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    padding: 10px;
+    border-radius: 10px;
+    background: #fafafa;
+}
+
+.detail_label {
+    font-size: 15px;
+    color: #333;
+    white-space: nowrap;
+}
+
+.detail_value {
+    font-size: 15px;
+    font-weight: 700;
+    color: #222;
+    text-align: right;
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+/* 진화 과정 */
+.modal_evolution {
+    padding: 14px;
+    margin-left: -20px;
+    margin-right: 20px;
+    border-radius: 14px;
+    background: #f7f7f7;
+    border: 1px solid #eeeeee;
+}
+
+.evolution_title {
+    margin: 2px 0 12px;
+    font-size: 16px;
+    font-weight: 800;
+    color: #333;
+}
+
+.evolution_list {
+    display: flex;
+    flex-direction: column;
+    gap: 7px;
+}
+
+.evolution_item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+
+    padding: 14px 10px;
+    border-radius: 14px;
+    background: #fff;
+    border: 1px solid #eeeeee;
+    cursor: pointer;
+
+    transition:
+        background 0.15s ease,
+        border-color 0.15s ease,
+        transform 0.08s ease,
+        box-shadow 0.15s ease;
+}
+
+.evolution_item:hover {
+    background: #f6f7fb;
+    border-color: #dfe3f2;
+    box-shadow: 0 6px 16px rgba(0,0,0,0.06);
+}
+
+.evolution_item:active {
+    transform: translateY(1px);
+}
+
+.evolution_item img {
+    width: 100px;
+    height: 100px;
+    object-fit: contain;
+    flex: 0 0 auto;
+}
+
+.evolution_item span {
+    font-size: 15px;
+    font-weight: 800;
+    color: #222;
+    text-align: center;
+    white-space: nowrap;
+}
+

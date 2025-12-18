@@ -86,31 +86,57 @@ const PAGE_SIZE = 18;
 let currentPokemonId = null;
 let isPaging = false;
 
+/* 무한 스크롤 상태 */
+let currentPage = 1;
+let isLoading = false;
+let hasMore = true;
+
 /* 외부 진입점 */
 export function initCardList() {
-    loadPage(1);
     bindModalClose();
+    initScrollTopButton();
+
+    // 초기 1페이지는 직접 로드
+    loadPage(currentPage).then(() => {
+        // 초기 로드 끝난 뒤에 옵저버 시작
+        initInfiniteScroll();
+    });
 }
 
 /* 페이지 로드 */
 async function loadPage(page) {
+    if (isLoading || !hasMore) return;
+    isLoading = true;
+
     const offset = (page - 1) * PAGE_SIZE;
     const { results } = await fetchPokemonList(PAGE_SIZE, offset);
+
+    if (!results.length) {
+        hasMore = false;
+        isLoading = false;
+        return;
+    }
 
     const details = await Promise.all(
         results.map(async (p) => {
             const detail = await fetchPokemonDetail(p.url);
             const ko = await getKoreanSpecies(detail.id);
-            return {
-                ...detail,
-                ...ko
-            };
+            return { ...detail, ...ko };
         })
     );
 
-    const filtered = applyFilter(details);
-    renderCards(filtered);
+    // 한글 준비 안 된 포켓몬 제거
+    const koreanReady = details.filter(p => p.nameKo);
+
+    const filtered = applyFilter(koreanReady);
+
+    const isFirstPage = page === 1;
+    renderCards(filtered, !isFirstPage);
+
+    currentPage++;
+    isLoading = false;
 }
+
 
 /* 필터 */
 function applyFilter(list) {
@@ -127,10 +153,11 @@ function applyFilter(list) {
 }
 
 /* 카드 렌더 */
-function renderCards(list) {
+function renderCards(list, append = false) {
     const container = document.getElementById("card_list");
     if (!container) return;
-    container.innerHTML = "";
+
+    if (!append) container.innerHTML = "";
 
     list.forEach(p => {
         const card = document.createElement("article");
@@ -154,21 +181,65 @@ function renderCards(list) {
       </div>
     `;
 
-        /* 카드 hover용 타입 색 변수 */
-        const chips = card.querySelectorAll(".type_chip");
-        if (chips[0]) {
-            const c1 = getComputedStyle(chips[0]).backgroundColor;
-            card.style.setProperty("--type-color", c1);
-            card.style.setProperty("--type-color-1", c1);
-        }
-        if (chips[1]) {
-            const c2 = getComputedStyle(chips[1]).backgroundColor;
-            card.style.setProperty("--type-color-2", c2);
-            card.classList.add("dual-type");
-        }
-
         card.addEventListener("click", () => openModal(p));
+
+        /* 먼저 DOM에 붙인다 */
         container.appendChild(card);
+
+        /* 그 다음 프레임에 색을 읽어서 변수 세팅 */
+        requestAnimationFrame(() => {
+            const chips = card.querySelectorAll(".type_chip");
+
+            if (chips[0]) {
+                const c1 = getComputedStyle(chips[0]).backgroundColor;
+                card.style.setProperty("--type-color", c1);
+                card.style.setProperty("--type-color-1", c1);
+            }
+            if (chips[1]) {
+                const c2 = getComputedStyle(chips[1]).backgroundColor;
+                card.style.setProperty("--type-color-2", c2);
+                card.classList.add("dual-type");
+            }
+        });
+    });
+}
+
+
+// 무한 스크롤
+function initInfiniteScroll() {
+    const observerTarget = document.getElementById("scrollObserver");
+    if (!observerTarget) return;
+
+    const observer = new IntersectionObserver(
+        (entries) => {
+            if (entries[0].isIntersecting && !isLoading && hasMore) {
+                loadPage(currentPage);
+            }
+        },
+        { rootMargin: "200px" }
+    );
+
+    observer.observe(observerTarget);
+}
+
+// 맨 위로 버튼
+function initScrollTopButton() {
+    const btn = document.getElementById("scrollTopBtn");
+    if (!btn) return;
+
+    window.addEventListener("scroll", () => {
+        if (window.scrollY > 400) {
+            btn.classList.add("show");
+        } else {
+            btn.classList.remove("show");
+        }
+    });
+
+    btn.addEventListener("click", () => {
+        window.scrollTo({
+            top: 0,
+            behavior: "smooth"
+        });
     });
 }
 

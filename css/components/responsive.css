@@ -1,0 +1,483 @@
+/* 반응형 */
+/* 테블릿 */
+@media (max-width: 1024px) {
+    /* 검색 필터 */
+    .filters {
+        padding: 35px 16px 0 16px;
+    }
+
+    /* 상단 검색 + 버튼 */
+    .filter_top {
+        min-height: 56px;
+        position: relative;
+    }
+
+    .search_wrap.large {
+        max-width: 460px;
+    }
+
+    .search-input {
+        height: 46px;
+        font-size: 15px;
+    }
+
+    .filter_toggle_btn {
+        position: absolute;
+        top: 50%;
+        right: 16px;
+        transform: translateY(-50%);
+
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+
+        height: 38px;
+        padding: 0 14px;
+        border-radius: 20px;
+
+        background: #2b2b2b;
+        color: #fff;
+        font-size: 13px;
+        font-weight: 600;
+        cursor: pointer;
+    }
+
+    .filter_toggle_btn i {
+        font-size: 12px;
+    }
+
+    .mobile_only {
+        display: none;
+    }
+
+    /* 필터 그룹 */
+    .filter_group {
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+        padding: 10px 30px;
+    }
+
+    .filter_title {
+        font-size: 18px;
+        min-width: 56px;
+        padding-left: 5px;
+    }
+
+    .region_chip,
+    .type_chip {
+        height: 36px;
+        padding: 0 12px;
+        font-size: 14px;
+    }
+
+    /* 액션 버튼 */
+    .filter_actions {
+        margin-top: 40px;
+        gap: 10px;
+        padding-bottom: 20px;
+    }
+
+    .action_btn {
+        height: 38px;
+        font-size: 14px;
+        padding: 0 20px;
+    }
+
+    /* 카드리스트 */
+    .card_list {
+        max-width: 100%;
+        padding-inline: 24px;
+        margin: 32px auto;
+        grid-template-columns: repeat(3, minmax(220px, 1fr));
+        column-gap: 20px;
+        row-gap: 28px;
+        box-sizing: border-box;
+    }
+
+    /* 카드 크기 */
+    .pokemon_card {
+        padding: 14px 12px 16px;
+    }
+
+    /* 텍스트 크기 조정 */
+    .pokemon_no {
+        font-size: 13px;
+    }
+
+    .pokemon_name {
+        font-size: 17px;
+        margin-bottom: 22px;
+    }
+
+    /* 타입 칩 */
+    .pokemon_card .type_chip {
+        width: 95px;
+        font-size: 15px;
+    }
+
+    .type_chip {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    /* hover 효과 완화 */
+    .pokemon_card:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 18px rgba(0, 0, 0, 0.1);
+    }
+}
+
+/* 모바일 */
+@media (max-width: 768px) {
+    /* 검색 필터 */
+    .filters {
+        padding: 16px 14px 0 14px;
+    }
+
+    /* 상단 영역 세로 정렬 */
+    .filter_top {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 14px;
+        min-height: auto;
+    }
+
+    /* 검색 중앙 */
+    .search_center {
+        justify-content: stretch;
+    }
+
+    .search_wrap.large {
+        max-width: 100%;
+    }
+
+    .search-input {
+        height: 44px;
+        font-size: 14px;
+        padding-left: 16px;
+    }
+
+    .search_icon_btn {
+        right: 14px;
+        font-size: 16px;
+    }
+
+    /* 토글 버튼 */
+    .filter_toggle_btn {
+        all: unset;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 6px;
+
+        font-size: 14px;
+        font-weight: 600;
+        color: #444;
+        cursor: pointer;
+
+        margin: 12px auto 0;
+
+        outline: none;
+        box-shadow: none;
+        -webkit-tap-highlight-color: transparent;
+    }
+
+    .filter_toggle_btn i {
+        font-size: 12px;
+        transition: transform 0.2s ease;
+    }
+
+    /* 모바일 상세필터 버튼 long-press 방지 */
+    .filter_toggle_btn.mobile_only .btn_text {
+        pointer-events: none;
+        user-select: none;
+        -webkit-user-select: none;
+    }
+
+    .pc_only {
+        display: inline-flex;
+    }
+
+    .mobile_only {
+        display: none;
+        justify-content: center;
+        align-items: center;
+        gap: 6px;
+
+        margin: 20px auto 20px;
+
+        font-size: 14px;
+        font-weight: 600;
+        color: #444;
+
+        cursor: pointer;
+    }
+
+    /* 버튼처럼 안 보이게 */
+    .mobile_only {
+        background: none;
+        border: none;
+        padding: 0;
+    }
+
+    /* 필터 그룹  */
+    .filter_group {
+        flex-direction: column;
+        gap: 10px;
+        margin: 15px 0;
+    }
+
+    .filter_title {
+        font-size: 15px;
+        padding-top: 0;
+    }
+
+    .region_options,
+    .type_options {
+        gap: 8px;
+    }
+
+    .region_chip,
+    .type_chip {
+        height: 34px;
+        padding: 0 12px;
+        font-size: 13.5px;
+    }
+
+    .filter_detail {
+        transition:
+            max-height 0.55s cubic-bezier(0.4, 0, 0.2, 1),
+            opacity 0.35s ease,
+            transform 0.35s ease;
+    }
+
+    /* 액션 버튼 */
+    .filter_actions {
+        flex-direction: column;
+        gap: 10px;
+        margin-top: 36px;
+    }
+
+    .action_btn {
+        width: 100%;
+        height: 40px;
+        font-size: 14px;
+    }
+
+    /* 카드리스트 */
+    .card_list {
+        max-width: 100%;
+        padding-inline: 16px;
+        margin: 28px auto;
+        grid-template-columns: repeat(2, minmax(160px, 1fr));
+        column-gap: 16px;
+        row-gap: 24px;
+        box-sizing: border-box;
+    }
+
+    /* 카드 크기 */
+    .pokemon_card {
+        padding: 14px 12px 16px;
+        border-radius: 10px;
+    }
+
+    /* 모바일에서는 hover 제거 */
+    .pokemon_card:hover {
+        transform: none;
+        box-shadow: 0 4px 14px rgba(0, 0, 0, 0.06);
+    }
+
+    /* 터치 피드백 */
+    .pokemon_card:active {
+        transform: scale(0.97);
+    }
+
+    /* 이미지 */
+    .pokemon_img {
+        margin-bottom: 10px;
+    }
+
+    .pokemon_img img {
+        width: 78%;
+        height: 78%;
+    }
+
+    /* 텍스트 */
+    .pokemon_no {
+        font-size: 12px;
+    }
+
+    .pokemon_name {
+        font-size: 16px;
+        margin-bottom: 18px;
+    }
+
+    /* 타입 */
+    .pokemon_types {
+        gap: 5px;
+    }
+
+    .pokemon_card .type_chip {
+        width: 90px;
+        font-size: 13px;
+        height: 32px;
+    }
+
+    .type_chip {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .scroll_observer {
+        padding: 28px 0;
+        font-size: 13px;
+        color: #999;
+    }
+
+    .scroll_top_btn {
+        right: 16px;
+        bottom: 16px;
+        width: 42px;
+        height: 42px;
+        font-size: 18px;
+    }
+}
+
+
+/* 모달 반응형 */
+/* 태블릿 */
+@media (max-width: 1024px) {
+
+    .pokemon_modal_content {
+        width: calc(100% - 40px);
+        max-width: 920px;
+        padding: 26px 24px 24px;
+        box-sizing: border-box;
+    }
+
+    /* 헤더 영역 고정 */
+    .modal_title_bar,
+    .modal_header {
+        width: 100%;
+        max-width: 100%;
+        box-sizing: border-box;
+    }
+
+    .modal_type_bar {
+        width: 100%;
+        max-width: 100%;
+    }
+
+    .modal_body {
+        gap: 10px;
+    }
+    
+    .modal_name {
+        font-size: 24px;
+    }
+
+    .modal_summary,
+    .type_chip,
+    .detail_label,
+    .detail_value {
+        font-size: 14px;
+    }
+
+    .evolution_title,
+    .evolution_item span {
+        font-size: 14px;
+    }
+
+    .modal_img_wrap {
+        width: 240px;
+        height: 240px;
+    }
+
+    .modal_evolution {
+        margin-right: 0px;
+        margin-left: 5px;
+    }
+}
+
+/* 태블릿 */
+@media (max-width: 900px) {
+
+    .pokemon_modal_content {
+        width: calc(100% - 32px);
+        padding: 24px 20px;
+    }
+
+    .modal_body {
+        grid-template-columns: 1fr;
+        gap: 18px;
+    }
+
+    .modal_header {
+        text-align: center;
+    }
+
+    .modal_img_wrap {
+        margin: 0 auto;
+        width: 220px;
+        height: 220px;
+    }
+
+    .modal_evolution {
+        order: 2;
+        margin-top: 12px;
+        padding-top: 12px;
+        border-top: 1px dashed #ddd;
+    }
+
+    .modal_details {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* 모바일 */
+@media (max-width: 520px) {
+
+    .pokemon_modal {
+        padding: 12px;
+    }
+
+    .pokemon_modal_content {
+        width: 100%;
+        max-height: 80vh;
+        overflow-y: auto;
+        padding: 20px 16px;
+        border-radius: 14px;
+    }
+
+    .modal_title_bar {
+        width: 100%;
+        grid-template-columns: 1fr;
+        text-align: center;
+        padding-bottom: 14px;
+    }
+
+    .modal_nav {
+        display: none;
+    }
+
+    .modal_name {
+        font-size: 22px;
+    }
+
+    .modal_img_wrap {
+        width: 200px;
+        height: 200px;
+    }
+
+    .modal_summary {
+        font-size: 13px;
+        padding: 10px 12px;
+    }
+
+    .detail_item {
+        padding: 10px 8px;
+    }
+}
