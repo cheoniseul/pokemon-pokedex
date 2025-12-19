@@ -30,37 +30,3 @@
 .main {
   padding-top: 80px;
 }
-
-/* 반응형 */
-/* 테블릿 */
-@media (max-width: 1024px) {
-  .header {
-    height: 72px;
-  }
-
-  .logo {
-    font-size: 28px;
-  }
-
-  .main {
-    padding-top: 72px;
-  }
-}
-
-/* 모바일 */
-@media (max-width: 768px) {
-  .header {
-    height: 64px;
-    background: #f6f6f6;
-    box-shadow: none;
-  }
-
-  .logo {
-    font-size: 24px;
-    color: #2b2b2b;
-  }
-
-  .main {
-    padding-top: 64px;
-  }
-}

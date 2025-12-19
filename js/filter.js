@@ -47,9 +47,27 @@ export function initFilterToggle() {
                 if (icon) icon.classList.toggle("rotated", isOpen);
             });
 
+            // 모바일 전용 처리
             if (window.innerWidth <= 768) {
                 if (pcBtn) pcBtn.style.display = isOpen ? "none" : "inline-flex";
                 if (mobileBtn) mobileBtn.style.display = isOpen ? "flex" : "none";
+
+                if (isOpen) {
+                    const header = document.querySelector("header");
+                    const headerHeight = header ? header.offsetHeight : 0;
+
+                    requestAnimationFrame(() => {
+                        setTimeout(() => {
+                            const filterTop =
+                                detailArea.getBoundingClientRect().top + window.scrollY;
+
+                            window.scrollTo({
+                                top: filterTop - headerHeight - 12,
+                                behavior: "smooth"
+                            });
+                        }, 50);
+                    });
+                }
             }
         });
     });

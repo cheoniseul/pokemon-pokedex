@@ -1,6 +1,17 @@
 /* 반응형 */
 /* 테블릿 */
 @media (max-width: 1024px) {
+    .header {
+        height: 72px;
+    }
+
+    .logo {
+        font-size: 28px;
+    }
+
+    .main {
+        padding-top: 72px;
+    }
 
     /* 검색 필터 */
     .filters {
@@ -137,6 +148,20 @@
 
 /* 모바일 */
 @media (max-width: 768px) {
+    .header {
+        height: 64px;
+        background: #f6f6f6;
+        box-shadow: none;
+    }
+
+    .logo {
+        font-size: 24px;
+        color: #2b2b2b;
+    }
+
+    .main {
+        padding-top: 64px;
+    }
 
     /* 검색 필터 */
     .filters {
@@ -351,6 +376,14 @@
         height: 40px;
         font-size: 16px;
     }
+
+    .footer {
+        margin-top: 40px;
+        padding: 20px 14px;
+
+        font-size: 12px;
+        line-height: 1.5;
+    }
 }
 
 
@@ -492,7 +525,7 @@
     }
 
     .detail_item {
-        padding: 10px 8px;
+        padding: 12px 10px;
     }
 
     /* 포멧몬 성별 */
@@ -504,6 +537,7 @@
     .modal_details {
         margin-bottom: -10px;
     }
+
     .modal_evolution {
         border: 1px solid #eeeeee;
         margin-left: 0px;
