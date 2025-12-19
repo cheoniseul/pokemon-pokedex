@@ -79,6 +79,8 @@
 .pokemon_name {
     font-size: 18px;
     font-weight: 700;
+    letter-spacing: 0.3px;
+    line-height: 1.2;
     color: #333;
     margin-bottom: 25px;
 }

@@ -1,4 +1,3 @@
-import { fetchPokemonList, fetchPokemonDetail } from "./api.js";
 import {
   initFilterToggle,
   initRegionFilter,
@@ -6,8 +5,6 @@ import {
   initResetButton,
   initSearchFilter
 } from "./filter.js";
-
-import { setFilterChangeHandler } from "./filter.js";
 
 import { initCardList } from "./card-list.js";
 
@@ -18,51 +15,10 @@ async function loadComponent(id, path) {
     document.getElementById(id).innerHTML = html;
 }
 
-setFilterChangeHandler((filterState) => {
-    // filterState = { region, types }
-    reloadPokemonCards(filterState);
-});
-
-
-/* 카드 데이터 로드 (API) */
-async function loadPokemonCards() {
-    const cardListEl = document.getElementById("card_list");
-    if (!cardListEl) return;
-
-    const { results } = await fetchPokemonList(60);
-
-    for (const pokemon of results) {
-        const detail = await fetchPokemonDetail(pokemon.url);
-
-        const card = document.createElement("article");
-        card.className = "pokemon_card";
-        card.dataset.id = detail.id;
-
-        card.innerHTML = `
-            <div class="pokemon_img">
-                <img src="${detail.sprites.other["official-artwork"].front_default}" alt="${detail.name}">
-            </div>
-
-            <div class="pokemon_info">
-                <span class="pokemon_no">도감번호 ${String(detail.id).padStart(4, "0")}</span>
-                <h3 class="pokemon_name">${detail.name}</h3>
-
-                <div class="pokemon_types">
-                    ${detail.types.map(t => `
-                        <span class="type_chip ${t.type.name}">
-                            ${t.type.name}
-                        </span>
-                    `).join("")}
-                </div>
-            </div>
-        `;
-
-        cardListEl.appendChild(card);
-    }
-}
-
 /* 전체 초기화 */
 async function loadAllComponents() {
+    console.log("loadAllComponents start");
+
     // header
     await loadComponent("header", "components/header.html");
 
@@ -74,18 +30,17 @@ async function loadAllComponents() {
     initResetButton();
     initSearchFilter();
 
-    // card list (HTML)
+    // card list (HTML only)
     await loadComponent("card-list", "components/card-list.html");
+    console.log("card-list HTML loaded");
 
-    // 카드 HTML 로드 후 API 실행
-    await loadPokemonCards();
-
-    // 카드 클릭 / 모달 로직 초기화
+    // 카드 리스트 로직 시작
     initCardList();
+    console.log("initCardList called");
 
     // footer
     await loadComponent("footer", "components/footer.html");
 }
 
-// 실제 실행
+// 실행
 loadAllComponents();

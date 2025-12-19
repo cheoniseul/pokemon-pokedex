@@ -193,8 +193,8 @@
 
 /* 포켓몬 이미지 */
 .modal_img_wrap {
-    width: 280px;
-    height: 280px;
+    width: 290px;
+    height: 290px;
     border-radius: 16px;
     background: #fafafa;
     display: flex;
@@ -294,6 +294,25 @@
     text-overflow: ellipsis;
     white-space: nowrap;
 }
+
+/* 포멧몬 성별 */
+.modal_gender {
+    font-size: 17px;
+    font-weight: 800;
+}
+
+.modal_gender .gender.male {
+    color: #4d96ff;
+}
+
+.modal_gender .gender.female {
+    color: #ff4d6d;
+}
+
+.modal_gender.gender-none {
+    color: #333;
+}
+
 
 /* 진화 과정 */
 .modal_evolution {

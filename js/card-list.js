@@ -5,13 +5,13 @@ import {
     fetchPokemonDetail,
     fetchPokemonSpecies
 } from "./api.js";
-import { getFilterState } from "./filter.js";
+
+import { getFilterState, setFilterChangeHandler } from "./filter.js";
+
+import { openModal, initPokemonModal } from "./pokemon-modal.js";
 
 /* 한글 캐시 */
 const speciesCache = new Map();
-
-/* 특성 한글 캐시 */
-const abilityCache = new Map();
 
 /* 타입 한글 매핑 */
 const TYPE_KO = {
@@ -35,56 +35,61 @@ const TYPE_KO = {
     fairy: "페어리"
 };
 
+// 지역 매핑
+const REGION_RANGE = {
+    kanto: [1, 151],
+    johto: [152, 251],
+    hoenn: [252, 386],
+    sinnoh: [387, 493],
+    unova: [494, 649],
+    kalos: [650, 721],
+    alola: [722, 809],
+    galar: [810, 898],
+    hisui: [899, 905],
+    paldea: [906, 1025]
+};
+
+/* 전체 도감 캐시 (검색용) */
+let allPokemonCache = [];
+let isSearchMode = false;
+
+// 전체 도감 목록 (id, url)
+let allPokemonIndex = [];
+
 /* species 한글 데이터 + 캐싱 */
 async function getKoreanSpecies(pokemonId) {
     if (speciesCache.has(pokemonId)) {
         return speciesCache.get(pokemonId);
     }
 
-    const species = await fetchPokemonSpecies(pokemonId);
+    try {
+        const species = await fetchPokemonSpecies(pokemonId);
 
-    const nameKo =
-        species.names.find(n => n.language.name === "ko")?.name ?? "";
+        const nameKo =
+            species.names.find(n => n.language.name === "ko")?.name ?? "";
 
-    const descKo =
-        species.flavor_text_entries
-            .find(f => f.language.name === "ko")
-            ?.flavor_text
-            ?.replace(/\n|\f/g, " ")
-        ?? "";
+        const descKo =
+            species.flavor_text_entries
+                .find(f => f.language.name === "ko")
+                ?.flavor_text
+                ?.replace(/\n|\f/g, " ")
+            ?? "";
 
-    const genusKo =
-        species.genera.find(g => g.language.name === "ko")?.genus ?? "";
+        const genusKo =
+            species.genera.find(g => g.language.name === "ko")?.genus ?? "";
 
-    const genderRate = species.gender_rate;
+        const genderRate = species.gender_rate;
 
-    const result = { nameKo, descKo, genusKo, genderRate };
-    speciesCache.set(pokemonId, result);
-    return result;
-}
-
-async function getKoreanAbility(abilityUrl) {
-    // ability ID 추출
-    const id = abilityUrl.split("/").filter(Boolean).pop();
-
-    if (abilityCache.has(id)) {
-        return abilityCache.get(id);
+        const result = { nameKo, descKo, genusKo, genderRate };
+        speciesCache.set(pokemonId, result);
+        return result;
+    } catch (e) {
+        return null;
     }
-
-    const ability = await fetch(`https://pokeapi.co/api/v2/ability/${id}`)
-        .then(r => r.json());
-
-    const nameKo =
-        ability.names.find(n => n.language.name === "ko")?.name ?? "";
-
-    abilityCache.set(id, nameKo);
-    return nameKo;
 }
 
 /* 상태 */
 const PAGE_SIZE = 18;
-let currentPokemonId = null;
-let isPaging = false;
 
 /* 무한 스크롤 상태 */
 let currentPage = 1;
@@ -92,9 +97,22 @@ let isLoading = false;
 let hasMore = true;
 
 /* 외부 진입점 */
-export function initCardList() {
-    bindModalClose();
+export async function initCardList() {
     initScrollTopButton();
+    initPokemonModal();
+
+    // 필터 변경 연결
+    setFilterChangeHandler(() => {
+        resetAndReloadByFilter();
+    });
+
+    // 전체 도감 목록 최초 1회 로드
+    const { results, count } = await fetchPokemonList(2000, 0);
+
+    allPokemonIndex = results.map(p => {
+        const id = Number(p.url.split("/").filter(Boolean).pop());
+        return { id, url: p.url };
+    });
 
     // 초기 1페이지는 직접 로드
     loadPage(currentPage).then(() => {
@@ -117,37 +135,63 @@ async function loadPage(page) {
         return;
     }
 
-    const details = await Promise.all(
-        results.map(async (p) => {
-            const detail = await fetchPokemonDetail(p.url);
-            const ko = await getKoreanSpecies(detail.id);
-            return { ...detail, ...ko };
-        })
-    );
+    // TODO: search mode fetch optimization (batch / limit)
+    const details = (
+        await Promise.all(
+            results.map(async (p) => {
+                const detail = await fetchPokemonDetail(p.url);
+                const ko = await getKoreanSpecies(detail.id);
+                if (!ko) return null;
+                return { ...detail, ...ko };
+            })
+        )
+    ).filter(Boolean);
 
     // 한글 준비 안 된 포켓몬 제거
     const koreanReady = details.filter(p => p.nameKo);
 
-    const filtered = applyFilter(koreanReady);
+    // 전체 캐시에 누적 (중복 방지)
+    koreanReady.forEach(p => {
+        if (!allPokemonCache.some(c => c.id === p.id)) {
+            allPokemonCache.push(p);
+        }
+    });
 
-    const isFirstPage = page === 1;
-    renderCards(filtered, !isFirstPage);
+    // 일반 모드에서만 화면에 렌더
+    if (!isSearchMode) {
+        const filtered = applyFilter(koreanReady);
+        const isFirstPage = page === 1;
+        renderCards(filtered, !isFirstPage);
+    }
 
     currentPage++;
     isLoading = false;
 }
 
-
 /* 필터 */
 function applyFilter(list) {
-    const { types, keyword } = getFilterState();
+    const { types, keyword, region } = getFilterState();
 
     return list.filter(p => {
+        // 지방 필터
+        if (region !== "all") {
+            const range = REGION_RANGE[region];
+            if (!range) return false;
+            if (p.id < range[0] || p.id > range[1]) return false;
+        }
+
+        // 타입 필터
         if (types.length) {
             const pTypes = p.types.map(t => t.type.name);
             if (!types.every(t => pTypes.includes(t))) return false;
         }
-        if (keyword && !p.nameKo.includes(keyword)) return false;
+
+        // 이름 검색
+        if (
+            keyword &&
+            !p.nameKo.toLowerCase().includes(keyword.toLowerCase())
+        ) return false;
+
         return true;
     });
 }
@@ -204,7 +248,6 @@ function renderCards(list, append = false) {
     });
 }
 
-
 // 무한 스크롤
 function initInfiniteScroll() {
     const observerTarget = document.getElementById("scrollObserver");
@@ -212,7 +255,7 @@ function initInfiniteScroll() {
 
     const observer = new IntersectionObserver(
         (entries) => {
-            if (entries[0].isIntersecting && !isLoading && hasMore) {
+            if (entries[0].isIntersecting && !isLoading && hasMore && !isSearchMode) {
                 loadPage(currentPage);
             }
         },
@@ -243,152 +286,73 @@ function initScrollTopButton() {
     });
 }
 
-/* 모달 열기 */
-async function openModal(p) {
-    const modal = document.getElementById("pokemonModal");
-    if (!modal) return;
+// 검색 필터
+function resetAndReloadByFilter() {
+    const { keyword, types, region } = getFilterState();
 
-    currentPokemonId = p.id;
+    const isFiltering =
+        keyword.length > 0 ||
+        types.length > 0 ||
+        region !== "all";
 
-    modal.querySelector(".modal_img").src =
-        p.sprites.other["official-artwork"].front_default;
-    modal.querySelector(".modal_img").alt = p.nameKo;
-    modal.querySelector(".modal_no").textContent =
-        `도감번호 ${String(p.id).padStart(4, "0")}`;
-    modal.querySelector(".modal_name").textContent = p.nameKo;
+    // 검색 모드 전환
+    isSearchMode = isFiltering;
 
-    modal.querySelector(".modal_summary").textContent = p.descKo;
-    modal.querySelector(".modal_species").textContent = p.genusKo;
-    modal.querySelector(".modal_height").textContent = `${p.height / 10} m`;
-    modal.querySelector(".modal_weight").textContent = `${p.weight / 10} kg`;
+    const container = document.getElementById("card_list");
+    if (container) container.innerHTML = "";
 
-    modal.querySelector(".modal_gender").textContent =
-        p.genderRate < 0
-            ? "무성"
-            : `♂ ${(8 - p.genderRate) * 12.5}% / ♀ ${p.genderRate * 12.5}%`;
+    // 검색 모드
+    if (isSearchMode) {
+        hasMore = false;
 
-    const abilityEl = modal.querySelector(".modal_abilities");
+        const filteredIndex = allPokemonIndex.filter(p => {
+            // region
+            if (region !== "all") {
+                const [min, max] = REGION_RANGE[region];
+                if (p.id < min || p.id > max) return false;
+            }
+            return true;
+        });
 
-    const abilityNamesKo = await Promise.all(
-        p.abilities.map(a => getKoreanAbility(a.ability.url))
-    );
+        // 검색 결과 상세 fetch
+        Promise.all(
+            filteredIndex.map(async p => {
+                const detail = await fetchPokemonDetail(p.url);
+                const ko = await getKoreanSpecies(p.id);
+                if (!ko) return null;
+                return { ...detail, ...ko };
+            })
+        ).then(all => {
+            const finalFiltered = all
+                .filter(Boolean)
+                .filter(p => {
+                    // 타입
+                    if (types.length) {
+                        const pTypes = p.types.map(t => t.type.name);
+                        if (!types.every(t => pTypes.includes(t))) return false;
+                    }
 
-    abilityEl.textContent = abilityNamesKo.join(", ");
+                    // 이름
+                    if (
+                        keyword &&
+                        !p.nameKo.toLowerCase().includes(keyword.toLowerCase())
+                    ) return false;
 
-    /* 타입 */
-    const typeArea = modal.querySelector(".modal_types_detail");
-    typeArea.innerHTML = "";
+                    return true;
+                });
 
-    p.types.forEach(t => {
-        const chip = document.createElement("span");
-        chip.className = `type_chip ${t.type.name}`;
-        chip.textContent = TYPE_KO[t.type.name];
-        typeArea.appendChild(chip);
-    });
+            renderCards(finalFiltered, false);
+        });
 
-    /* 타입바 */
-    const modalContent = modal.querySelector(".pokemon_modal_content");
-    modalContent.classList.remove("dual-type");
-    modalContent.style.removeProperty("--type-color-2");
-
-    if (typeArea.children[0]) {
-        modalContent.style.setProperty(
-            "--type-color",
-            getComputedStyle(typeArea.children[0]).backgroundColor
-        );
-    }
-    if (typeArea.children[1]) {
-        modalContent.classList.add("dual-type");
-        modalContent.style.setProperty(
-            "--type-color-1",
-            getComputedStyle(typeArea.children[0]).backgroundColor
-        );
-        modalContent.style.setProperty(
-            "--type-color-2",
-            getComputedStyle(typeArea.children[1]).backgroundColor
-        );
+        return;
     }
 
-    await renderEvolution(p.id);
+    // 일반 모드 복귀
+    currentPage = 1;
+    hasMore = true;
+    isLoading = false;
 
-    modal.classList.add("show");
-    modal.setAttribute("aria-hidden", "false");
-    document.body.style.overflow = "hidden";
-
-    updatePagingUI();
+    loadPage(currentPage);
 }
 
-/* 모달 닫기 */
-function bindModalClose() {
-    const modal = document.getElementById("pokemonModal");
-    if (!modal) return;
-
-    const closeBtn = modal.querySelector(".modal_close");
-    const bg = modal.querySelector(".pokemon_modal_bg");
-
-    const close = () => {
-        modal.classList.remove("show");
-        modal.setAttribute("aria-hidden", "true");
-        document.body.style.overflow = "";
-    };
-
-    closeBtn?.addEventListener("click", close);
-    bg?.addEventListener("click", close);
-}
-
-/* 진화 과정 */
-async function renderEvolution(id) {
-    const wrap = document.querySelector(".evolution_list");
-    if (!wrap) return;
-    wrap.innerHTML = "";
-
-    const species = await fetchPokemonSpecies(id);
-    const evoData = await fetch(species.evolution_chain.url).then(r => r.json());
-
-    let cur = evoData.chain;
-    while (cur) {
-        const pid = Number(cur.species.url.split("/").slice(-2, -1)[0]);
-        const detail = await fetchPokemonDetail(`https://pokeapi.co/api/v2/pokemon/${pid}`);
-        const ko = await getKoreanSpecies(pid);
-
-        const item = document.createElement("div");
-        item.className = "evolution_item";
-        item.innerHTML = `
-      <img src="${detail.sprites.front_default}" alt="${ko.nameKo}">
-      <span>${ko.nameKo}</span>
-    `;
-
-        item.addEventListener("click", () =>
-            openModal({ ...detail, ...ko })
-        );
-
-        wrap.appendChild(item);
-        cur = cur.evolves_to[0];
-    }
-}
-
-/* 모달 페이징 */
-function updatePagingUI() {
-    const modal = document.getElementById("pokemonModal");
-    if (!modal) return;
-
-    const prevBtn = modal.querySelector(".modal_nav.prev");
-    const nextBtn = modal.querySelector(".modal_nav.next");
-
-    prevBtn.disabled = currentPokemonId <= 1;
-
-    prevBtn.onclick = () => moveModal(currentPokemonId - 1);
-    nextBtn.onclick = () => moveModal(currentPokemonId + 1);
-}
-
-async function moveModal(id) {
-    if (isPaging || id < 1) return;
-    isPaging = true;
-    try {
-        const detail = await fetchPokemonDetail(`https://pokeapi.co/api/v2/pokemon/${id}`);
-        const ko = await getKoreanSpecies(id);
-        await openModal({ ...detail, ...ko });
-    } finally {
-        isPaging = false;
-    }
-}
+export { getKoreanSpecies, TYPE_KO };

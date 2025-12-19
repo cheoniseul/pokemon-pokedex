@@ -1,6 +1,7 @@
 /* 반응형 */
 /* 테블릿 */
 @media (max-width: 1024px) {
+
     /* 검색 필터 */
     .filters {
         padding: 35px 16px 0 16px;
@@ -127,10 +128,16 @@
         transform: translateY(-2px);
         box-shadow: 0 6px 18px rgba(0, 0, 0, 0.1);
     }
+
+    .scroll_top_btn {
+        right: 30px;
+        bottom: 28px;
+    }
 }
 
 /* 모바일 */
 @media (max-width: 768px) {
+
     /* 검색 필터 */
     .filters {
         padding: 16px 14px 0 14px;
@@ -339,10 +346,10 @@
 
     .scroll_top_btn {
         right: 16px;
-        bottom: 16px;
-        width: 42px;
-        height: 42px;
-        font-size: 18px;
+        bottom: 17px;
+        width: 40px;
+        height: 40px;
+        font-size: 16px;
     }
 }
 
@@ -374,9 +381,15 @@
     .modal_body {
         gap: 10px;
     }
-    
+
     .modal_name {
         font-size: 24px;
+    }
+
+    /* 포멧몬 성별 */
+    .modal_gender {
+        font-size: 15px;
+        font-weight: 800;
     }
 
     .modal_summary,
@@ -429,7 +442,7 @@
         order: 2;
         margin-top: 12px;
         padding-top: 12px;
-        border-top: 1px dashed #ddd;
+        border-top: 1px solid #ddd;
     }
 
     .modal_details {
@@ -473,11 +486,26 @@
     }
 
     .modal_summary {
-        font-size: 13px;
+        font-size: 14px;
         padding: 10px 12px;
+        margin-top: 15px
     }
 
     .detail_item {
         padding: 10px 8px;
+    }
+
+    /* 포멧몬 성별 */
+    .modal_gender {
+        font-size: 15px;
+        font-weight: 800;
+    }
+
+    .modal_details {
+        margin-bottom: -10px;
+    }
+    .modal_evolution {
+        border: 1px solid #eeeeee;
+        margin-left: 0px;
     }
 }
