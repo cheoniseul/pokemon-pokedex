@@ -53,9 +53,6 @@ const REGION_RANGE = {
 let allPokemonCache = [];
 let isSearchMode = false;
 
-// 전체 도감 목록 (id, url)
-let allPokemonIndex = [];
-
 /* species 한글 데이터 + 캐싱 */
 async function getKoreanSpecies(pokemonId) {
     if (speciesCache.has(pokemonId)) {
@@ -106,19 +103,15 @@ export async function initCardList() {
         resetAndReloadByFilter();
     });
 
-    // 전체 도감 목록 최초 1회 로드
-    const { results, count } = await fetchPokemonList(2000, 0);
+    // 전체 도감 preload
+    await preloadAllPokemon();
 
-    allPokemonIndex = results.map(p => {
-        const id = Number(p.url.split("/").filter(Boolean).pop());
-        return { id, url: p.url };
-    });
+    // 첫 페이지 렌더 (캐시에서)
+    renderCards(allPokemonCache.slice(0, PAGE_SIZE), false);
+    currentPage = 2;
 
-    // 초기 1페이지는 직접 로드
-    loadPage(currentPage).then(() => {
-        // 초기 로드 끝난 뒤에 옵저버 시작
-        initInfiniteScroll();
-    });
+    // 무한 스크롤 시작
+    initInfiniteScroll();
 }
 
 /* 페이지 로드 */
@@ -126,74 +119,23 @@ async function loadPage(page) {
     if (isLoading || !hasMore) return;
     isLoading = true;
 
-    const offset = (page - 1) * PAGE_SIZE;
-    const { results } = await fetchPokemonList(PAGE_SIZE, offset);
+    const start = (page - 1) * PAGE_SIZE;
+    const end = page * PAGE_SIZE;
+    const slice = allPokemonCache.slice(start, end);
 
-    if (!results.length) {
+    if (!slice.length) {
         hasMore = false;
         isLoading = false;
         return;
     }
 
-    // TODO: search mode fetch optimization (batch / limit)
-    const details = (
-        await Promise.all(
-            results.map(async (p) => {
-                const detail = await fetchPokemonDetail(p.url);
-                const ko = await getKoreanSpecies(detail.id);
-                if (!ko) return null;
-                return { ...detail, ...ko };
-            })
-        )
-    ).filter(Boolean);
-
-    // 한글 준비 안 된 포켓몬 제거
-    const koreanReady = details.filter(p => p.nameKo);
-
-    // 전체 캐시에 누적 (중복 방지)
-    koreanReady.forEach(p => {
-        if (!allPokemonCache.some(c => c.id === p.id)) {
-            allPokemonCache.push(p);
-        }
-    });
-
-    // 일반 모드에서만 화면에 렌더
+    // 일반 모드에서만 무한 스크롤 렌더
     if (!isSearchMode) {
-        const filtered = applyFilter(koreanReady);
-        const isFirstPage = page === 1;
-        renderCards(filtered, !isFirstPage);
+        renderCards(slice, true); // append
     }
 
     currentPage++;
     isLoading = false;
-}
-
-/* 필터 */
-function applyFilter(list) {
-    const { types, keyword, region } = getFilterState();
-
-    return list.filter(p => {
-        // 지방 필터
-        if (region !== "all") {
-            const range = REGION_RANGE[region];
-            if (!range) return false;
-            if (p.id < range[0] || p.id > range[1]) return false;
-        }
-
-        // 타입 필터
-        if (types.length) {
-            const pTypes = p.types.map(t => t.type.name);
-            if (!types.every(t => pTypes.includes(t))) return false;
-        }
-
-        // 이름 검색
-        if (
-            keyword &&
-            !p.nameKo.toLowerCase().includes(keyword.toLowerCase())
-        ) return false;
-
-        return true;
-    });
 }
 
 /* 카드 렌더 */
@@ -295,64 +237,57 @@ function resetAndReloadByFilter() {
         types.length > 0 ||
         region !== "all";
 
-    // 검색 모드 전환
     isSearchMode = isFiltering;
 
     const container = document.getElementById("card_list");
     if (container) container.innerHTML = "";
 
-    // 검색 모드
-    if (isSearchMode) {
-        hasMore = false;
+    const filtered = allPokemonCache.filter(p => {
+        if (region !== "all") {
+            const [min, max] = REGION_RANGE[region];
+            if (p.id < min || p.id > max) return false;
+        }
 
-        const filteredIndex = allPokemonIndex.filter(p => {
-            // region
-            if (region !== "all") {
-                const [min, max] = REGION_RANGE[region];
-                if (p.id < min || p.id > max) return false;
-            }
-            return true;
-        });
+        if (types.length) {
+            const pTypes = p.types.map(t => t.type.name);
+            if (!types.every(t => pTypes.includes(t))) return false;
+        }
 
-        // 검색 결과 상세 fetch
-        Promise.all(
-            filteredIndex.map(async p => {
-                const detail = await fetchPokemonDetail(p.url);
-                const ko = await getKoreanSpecies(p.id);
-                if (!ko) return null;
-                return { ...detail, ...ko };
-            })
-        ).then(all => {
-            const finalFiltered = all
-                .filter(Boolean)
-                .filter(p => {
-                    // 타입
-                    if (types.length) {
-                        const pTypes = p.types.map(t => t.type.name);
-                        if (!types.every(t => pTypes.includes(t))) return false;
-                    }
+        if (
+            keyword &&
+            !p.nameKo.toLowerCase().includes(keyword.toLowerCase())
+        ) return false;
 
-                    // 이름
-                    if (
-                        keyword &&
-                        !p.nameKo.toLowerCase().includes(keyword.toLowerCase())
-                    ) return false;
+        return true;
+    });
 
-                    return true;
-                });
+    renderCards(filtered.slice(0, PAGE_SIZE), false);
 
-            renderCards(finalFiltered, false);
-        });
+    hasMore = !isSearchMode;
+    currentPage = 2;
+}
 
-        return;
-    }
+async function preloadAllPokemon() {
+    const overlay = document.getElementById("loadingOverlay");
+    if (overlay) overlay.style.display = "flex";
 
-    // 일반 모드 복귀
-    currentPage = 1;
-    hasMore = true;
-    isLoading = false;
+    const { results } = await fetchPokemonList(2000, 0);
 
-    loadPage(currentPage);
+    const all = await Promise.all(
+        results.map(async p => {
+            const id = Number(p.url.split("/").filter(Boolean).pop());
+
+            const detail = await fetchPokemonDetail(p.url);
+            const ko = await getKoreanSpecies(id);
+            if (!ko) return null;
+
+            return { ...detail, ...ko };
+        })
+    );
+
+    allPokemonCache = all.filter(Boolean);
+
+    if (overlay) overlay.style.display = "none";
 }
 
 export { getKoreanSpecies, TYPE_KO };
