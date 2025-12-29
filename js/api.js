@@ -33,9 +33,11 @@ export function fetchPokemonDetail(url) {
 }
 
 /* 포켓몬 종(species) - 한글 이름, 설명용 */
-export function fetchPokemonSpecies(id) {
-    return request(
-        `${API_BASE}/pokemon-species/${id}`,
-        "포켓몬 종 정보 로드 실패"
-    );
+export function fetchPokemonSpecies(idOrUrl) {
+  const url =
+    typeof idOrUrl === "string"
+      ? idOrUrl
+      : `${API_BASE}/pokemon-species/${idOrUrl}`;
+
+  return request(url, "포켓몬 종 정보 로드 실패");
 }

@@ -36,7 +36,27 @@ export function initFilterToggle() {
     const pcBtn = document.querySelector(".pc_only");
     const mobileBtn = document.querySelector(".mobile_only");
 
+    // 상세필터 검색 버튼
+    const applyBtn = document.querySelector(".filter_actions .action_btn.primary");
+    const cardList = document.getElementById("card_list");
+
     if (!detailArea || !toggleBtns.length) return;
+
+    // 공통 닫기 함수
+    const closeDetail = () => {
+        detailArea.classList.remove("open");
+
+        toggleBtns.forEach(b => {
+            const icon = b.querySelector("i");
+            if (icon) icon.classList.remove("rotated");
+        });
+
+        // 모바일 전용 버튼 표시 상태 정리
+        if (window.innerWidth <= 768) {
+            if (pcBtn) pcBtn.style.display = "inline-flex";
+            if (mobileBtn) mobileBtn.style.display = "none";
+        }
+    };
 
     toggleBtns.forEach(btn => {
         btn.addEventListener("click", () => {
@@ -71,6 +91,26 @@ export function initFilterToggle() {
             }
         });
     });
+
+    // 모바일에서 "검색" 누르면 필터 닫고 카드리스트로 이동
+    if (applyBtn) {
+        applyBtn.addEventListener("click", (e) => {
+
+            e.preventDefault();
+
+            if (window.innerWidth > 768) return;
+
+            notifyFilterChange();
+            closeDetail();
+
+            // 닫히는 transition 끝나고 카드 리스트로 스크롤
+            setTimeout(() => {
+                if (cardList) {
+                    cardList.scrollIntoView({ behavior: "smooth", block: "start" });
+                }
+            }, 300);
+        });
+    }
 }
 
 /* 지방 필터 */

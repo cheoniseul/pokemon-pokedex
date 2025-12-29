@@ -54,13 +54,17 @@ let allPokemonCache = [];
 let isSearchMode = false;
 
 /* species 한글 데이터 + 캐싱 */
-async function getKoreanSpecies(pokemonId) {
-    if (speciesCache.has(pokemonId)) {
-        return speciesCache.get(pokemonId);
+async function getKoreanSpecies(speciesUrl) {
+    if (!speciesUrl) return null;
+
+    // 캐시 키를 speciesUrl로
+    if (speciesCache.has(speciesUrl)) {
+        return speciesCache.get(speciesUrl);
     }
 
     try {
-        const species = await fetchPokemonSpecies(pokemonId);
+        // url로 species 요청 (api.js가 url도 받게 됐으니까)
+        const species = await fetchPokemonSpecies(speciesUrl);
 
         const nameKo =
             species.names.find(n => n.language.name === "ko")?.name ?? "";
@@ -78,7 +82,7 @@ async function getKoreanSpecies(pokemonId) {
         const genderRate = species.gender_rate;
 
         const result = { nameKo, descKo, genusKo, genderRate };
-        speciesCache.set(pokemonId, result);
+        speciesCache.set(speciesUrl, result);
         return result;
     } catch (e) {
         return null;
@@ -278,7 +282,7 @@ async function preloadAllPokemon() {
             const id = Number(p.url.split("/").filter(Boolean).pop());
 
             const detail = await fetchPokemonDetail(p.url);
-            const ko = await getKoreanSpecies(id);
+            const ko = await getKoreanSpecies(detail.species?.url);
             if (!ko) return null;
 
             return { ...detail, ...ko };
