@@ -51,6 +51,7 @@ const REGION_RANGE = {
 
 /* 전체 도감 캐시 (검색용) */
 let allPokemonCache = [];
+let filteredPokemonCache = [];
 let isSearchMode = false;
 
 /* species 한글 데이터 + 캐싱 */
@@ -124,9 +125,11 @@ async function loadPage(page) {
     if (isLoading || !hasMore) return;
     isLoading = true;
 
+    const activeList = isSearchMode ? filteredPokemonCache : allPokemonCache;
+
     const start = (page - 1) * PAGE_SIZE;
     const end = page * PAGE_SIZE;
-    const slice = allPokemonCache.slice(start, end);
+    const slice = activeList.slice(start, end);
 
     // 더 이상 가져올 게 없으면 종료
     if (!slice.length) {
@@ -136,18 +139,14 @@ async function loadPage(page) {
         return;
     }
 
-    // 일반 모드에서만 무한 스크롤 렌더
-    if (!isSearchMode) {
-        renderCards(slice, true); // append
-    }
+    // 검색모드든 일반모드든 append 렌더
+    renderCards(slice, page !== 1);
 
     currentPage++;
     isLoading = false;
 
-    // 이번 페이지가 "마지막 페이지"였으면 hasMore=false
-    if (end >= allPokemonCache.length) {
-        hasMore = false;
-    }
+    if (end >= activeList.length) hasMore = false;
+
     updateObserverUI()
 }
 
@@ -210,7 +209,7 @@ function initInfiniteScroll() {
 
     const observer = new IntersectionObserver(
         (entries) => {
-            if (entries[0].isIntersecting && !isLoading && hasMore && !isSearchMode) {
+            if (entries[0].isIntersecting && !isLoading && hasMore) {
                 loadPage(currentPage);
             }
         },
@@ -225,12 +224,6 @@ function updateObserverUI() {
     const wrap = document.getElementById("scrollObserver");
     const text = wrap?.querySelector(".loading_text");
     if (!wrap || !text) return;
-
-    // 필터/검색 모드 + 더 불러올 게 있으면 숨김
-    if (isSearchMode && hasMore) {
-        wrap.style.display = "none";
-        return;
-    }
 
     wrap.style.display = "block";
     text.textContent = hasMore ? "불러오는 중..." : "모든 포켓몬을 불러왔어요.";
@@ -259,6 +252,8 @@ function initScrollTopButton() {
 
 // 검색 필터
 function resetAndReloadByFilter() {
+    isLoading = false;
+
     const { keyword, types, region } = getFilterState();
 
     const isFiltering =
@@ -272,6 +267,7 @@ function resetAndReloadByFilter() {
     if (container) container.innerHTML = "";
 
     const filtered = allPokemonCache.filter(p => {
+
         if (region !== "all") {
             const range = REGION_RANGE[region];
             if (!range) return false;
@@ -293,11 +289,18 @@ function resetAndReloadByFilter() {
         return true;
     });
 
-    renderCards(filtered.slice(0, PAGE_SIZE), false);
+    // 필터 결과를 캐시에 저장
+    filteredPokemonCache = filtered;
 
-    hasMore = !isSearchMode;
-    currentPage = 2;
-    updateObserverUI()
+    // 페이지 상태 리셋
+    currentPage = 1;
+
+    // 현재 모드 기준 리스트로 hasMore 계산
+    const activeList = isSearchMode ? filteredPokemonCache : allPokemonCache;
+    hasMore = activeList.length > 0;
+
+    // 1페이지 로드
+    loadPage(currentPage);
 }
 
 function getIdFromUrl(url) {
