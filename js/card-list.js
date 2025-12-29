@@ -115,6 +115,7 @@ export async function initCardList() {
     currentPage = 2;
 
     // 무한 스크롤 시작
+    updateObserverUI()
     initInfiniteScroll();
 }
 
@@ -127,9 +128,11 @@ async function loadPage(page) {
     const end = page * PAGE_SIZE;
     const slice = allPokemonCache.slice(start, end);
 
+    // 더 이상 가져올 게 없으면 종료
     if (!slice.length) {
         hasMore = false;
         isLoading = false;
+        updateObserverUI()
         return;
     }
 
@@ -140,6 +143,12 @@ async function loadPage(page) {
 
     currentPage++;
     isLoading = false;
+
+    // 이번 페이지가 "마지막 페이지"였으면 hasMore=false
+    if (end >= allPokemonCache.length) {
+        hasMore = false;
+    }
+    updateObserverUI()
 }
 
 /* 카드 렌더 */
@@ -152,14 +161,14 @@ function renderCards(list, append = false) {
     list.forEach(p => {
         const card = document.createElement("article");
         card.className = "pokemon_card";
-        card.dataset.id = p.id;
+        card.dataset.id = p.dexNo;
 
         card.innerHTML = `
       <div class="pokemon_img">
         <img src="${p.sprites.other["official-artwork"].front_default}" alt="${p.nameKo}">
       </div>
       <div class="pokemon_info">
-        <span class="pokemon_no">도감번호 ${String(p.id).padStart(4, "0")}</span>
+        <span class="pokemon_no">도감번호 ${String(p.dexNo).padStart(4, "0")}</span>
         <h3 class="pokemon_name">${p.nameKo}</h3>
         <div class="pokemon_types">
           ${p.types.map(t => `
@@ -211,6 +220,22 @@ function initInfiniteScroll() {
     observer.observe(observerTarget);
 }
 
+// 스크롤 끝 지점
+function updateObserverUI() {
+    const wrap = document.getElementById("scrollObserver");
+    const text = wrap?.querySelector(".loading_text");
+    if (!wrap || !text) return;
+
+    // 필터/검색 모드 + 더 불러올 게 있으면 숨김
+    if (isSearchMode && hasMore) {
+        wrap.style.display = "none";
+        return;
+    }
+
+    wrap.style.display = "block";
+    text.textContent = hasMore ? "불러오는 중..." : "모든 포켓몬을 불러왔어요.";
+}
+
 // 맨 위로 버튼
 function initScrollTopButton() {
     const btn = document.getElementById("scrollTopBtn");
@@ -249,7 +274,7 @@ function resetAndReloadByFilter() {
     const filtered = allPokemonCache.filter(p => {
         if (region !== "all") {
             const [min, max] = REGION_RANGE[region];
-            if (p.id < min || p.id > max) return false;
+            if (p.dexNo < min || p.dexNo > max) return false;
         }
 
         if (types.length) {
@@ -269,6 +294,11 @@ function resetAndReloadByFilter() {
 
     hasMore = !isSearchMode;
     currentPage = 2;
+    updateObserverUI()
+}
+
+function getIdFromUrl(url) {
+    return Number(url.split("/").filter(Boolean).pop());
 }
 
 async function preloadAllPokemon() {
@@ -278,18 +308,33 @@ async function preloadAllPokemon() {
     const { results } = await fetchPokemonList(2000, 0);
 
     const all = await Promise.all(
-        results.map(async p => {
-            const id = Number(p.url.split("/").filter(Boolean).pop());
-
+        results.map(async (p) => {
             const detail = await fetchPokemonDetail(p.url);
-            const ko = await getKoreanSpecies(detail.species?.url);
+
+            const speciesUrl = detail.species?.url;
+            const speciesId = speciesUrl ? getIdFromUrl(speciesUrl) : null;
+
+            // 전국도감(종) 범위만
+            if (!speciesId || speciesId > 1025) return null;
+
+            const ko = await getKoreanSpecies(speciesUrl);
             if (!ko) return null;
 
-            return { ...detail, ...ko };
+            return {
+                ...detail,
+                ...ko,
+                dexNo: speciesId,
+            };
         })
     );
 
-    allPokemonCache = all.filter(Boolean);
+    // 폼 중복 제거 (같은 dexNo 하나만)
+    const map = new Map();
+    all.filter(Boolean).forEach((poke) => {
+        if (!map.has(poke.dexNo)) map.set(poke.dexNo, poke);
+    });
+
+    allPokemonCache = [...map.values()].sort((a, b) => a.dexNo - b.dexNo);
 
     if (overlay) overlay.style.display = "none";
 }
