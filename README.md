@@ -61,5 +61,4 @@ https://cheoniseul.github.io/pokemon-pokedex/
 
 ## 제작자
 
-- 천이슬  
-- Front-end Developer  
+- 천이슬
