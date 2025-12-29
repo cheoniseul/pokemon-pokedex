@@ -56,7 +56,7 @@ JavaScript 기반의 구조화된 로직 설계와 UI/UX 개선에 중점을 두
 
 ## 데모
 
-웹에서 직접 기능을 확인할 수 있습니다.
+웹에서 직접 기능을 확인할 수 있습니다.  
 https://cheoniseul.github.io/pokemon-pokedex/
 
 ---
