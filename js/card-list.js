@@ -273,7 +273,10 @@ function resetAndReloadByFilter() {
 
     const filtered = allPokemonCache.filter(p => {
         if (region !== "all") {
-            const [min, max] = REGION_RANGE[region];
+            const range = REGION_RANGE[region];
+            if (!range) return false;
+
+            const [min, max] = range;
             if (p.dexNo < min || p.dexNo > max) return false;
         }
 

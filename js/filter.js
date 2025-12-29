@@ -82,7 +82,7 @@ export function initFilterToggle() {
                                 detailArea.getBoundingClientRect().top + window.scrollY;
 
                             window.scrollTo({
-                                top: filterTop - headerHeight - 12,
+                                top: filterTop - headerHeight - 30,
                                 behavior: "smooth"
                             });
                         }, 50);
