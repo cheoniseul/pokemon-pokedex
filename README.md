@@ -1,4 +1,5 @@
 # pokemon-pokedex
+PokeAPI 기반 포켓몬 도감 웹 애플리케이션
 
 ## 프로젝트 소개
 
@@ -26,11 +27,9 @@ JavaScript 기반의 구조화된 로직 설계와 UI/UX 개선에 중점을 두
 
 ## 기술 스택
 
-- HTML5  
-- CSS3 (Flexbox, Grid)  
-- JavaScript (ES6+)  
+- HTML5 / CSS3 / JavaScript (ES6+)
 - Fetch API  
-- GitHub Pages  
+- GitHub Pages
 
 ---
 
@@ -61,4 +60,9 @@ https://cheoniseul.github.io/pokemon-pokedex/
 
 ## 제작자
 
-- 천이슬
+- 천이슬 (Front-end)
+
+---
+
+## 관련 레포지토리
+- [포트폴리오로 돌아가기](https://github.com/cheoniseul/portfolio)
